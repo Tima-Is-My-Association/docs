@@ -1,0 +1,51 @@
+@startuml
+
+class association.models.Language {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +name:String
+    +slug:String
+    +code:String
+}
+
+class association.models.Word {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +name:String
+    +count:BigInteger
+    +languages:Language
+}
+
+class association.models.Association {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +word:Word
+    +association:Word
+    +count:BigInteger
+}
+
+class app.models.Profile {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +user:settings.AUTH_USER_MODEL
+    +cultural_background:String
+    +points:Float
+}
+
+class app.models.AssociationHistory {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +association:Association
+    +points:Float
+}
+
+app.models.AssociationHistory "0..*" *-- "0..*" association.models.Association
+association.models.Association "2" *-- "0..*" association.models.Word
+association.models.Word "1" *-- "0..*" association.models.Language
+
+@enduml
