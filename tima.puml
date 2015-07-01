@@ -15,7 +15,8 @@ class association.models.Word {
     +created_at:DateTime
     +name:String
     +count:BigInteger
-    +languages:Language
+    +language:Language
+    unique_together(name, language)
 }
 
 class association.models.Association {
@@ -34,6 +35,7 @@ class app.models.Profile {
     +user:settings.AUTH_USER_MODEL
     +cultural_background:String
     +points:Float
+    +languages:Language
 }
 
 class app.models.AssociationHistory {
@@ -45,6 +47,7 @@ class app.models.AssociationHistory {
 }
 
 app.models.AssociationHistory "0..*" *-- "0..*" association.models.Association
+app.models.Profile "0..*" *-- "0..*" association.models.Language
 association.models.Association "2" *-- "0..*" association.models.Word
 association.models.Word "1" *-- "0..*" association.models.Language
 
