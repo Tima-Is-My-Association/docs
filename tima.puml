@@ -42,13 +42,95 @@ class app.models.AssociationHistory {
     +id:Integer
     +updated_at:DateTime
     +created_at:DateTime
+    +user:settings.AUTH_USER_MODEL
     +association:Association
     +points:Float
 }
 
+class app.models.Newsletter {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +user:settings.AUTH_USER_MODEL
+    +words:Word
+}
+
+class oai_pmh.models.MetadataFormat {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +prefix:String
+    +schema:URL
+    +namespace:URL
+}
+
+class oai_pmh.models.Set {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +spec:String
+    +name:String
+    +description:string
+}
+
+class oai_pmh.models.Header {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +identifier:String
+    +timestamp:DateTime
+    +deleted:Boolean
+    +metadata_formats:MetadataFormat
+    +sets:Set
+}
+
+class oai_pmh.models.ResumptionToken {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +expiration_date:DateTime
+    +complete_list_size:Integer
+    +cursor:Integer
+    +token:String
+    +from_timestamp:DateTime
+    +until_timestamp:DateTime
+    +metadata_prefix:MetadataFormat
+    +set_spec:Set
+}
+
+class oai_pmh.models.DCRecord {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +header:Header
+    +dc_title:String
+    +dc_creator:String
+    +dc_subject:String
+    +dc_description:String
+    +dc_publisher:String
+    +dc_contributor:String
+    +dc_date:DateTime
+    +dc_type:String
+    +dc_format:String
+    +dc_identifier:String
+    +dc_source:String
+    +dc_language:String
+    +dc_relation:String
+    +dc_coverage:String
+    +dc_rights:String
+}
+
+
 app.models.AssociationHistory "0..*" *-- "0..*" association.models.Association
 app.models.Profile "0..*" *-- "0..*" association.models.Language
+app.models.Newsletter "0..*" *-- "0..*" association.models.Word
 association.models.Association "2" *-- "0..*" association.models.Word
 association.models.Word "1" *-- "0..*" association.models.Language
+
+oai_pmh.models.Header "0..*" *-- "0..*" oai_pmh.models.MetadataFormat
+oai_pmh.models.Header "0..*" *-- "0..*" oai_pmh.models.Set
+oai_pmh.models.ResumptionToken "0..1" *-- "0..*" oai_pmh.models.MetadataFormat
+oai_pmh.models.ResumptionToken "0..1" *-- "0..*" oai_pmh.models.Set
+oai_pmh.models.Header "0..1" --|> "1" oai_pmh.models.DCRecord
 
 @enduml
