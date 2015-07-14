@@ -1,0 +1,50 @@
+@startuml
+
+Client -> Tima: Authentication request
+note left
+  {
+    "username"  : "Name"
+     "client_id"    : "ID"
+  }
+end note
+
+Tima --> Client: Response
+note right
+  {
+    "n" : "UTC timestamp"
+  }
+end note
+
+Client -> Tima: Authentication
+note left
+  {
+    "username" : "Name"
+    "password" : "Password"
+     "client_id   : "ID"
+     "n"             : "UTC timestamp"
+     "token"      : "client_secret + n"
+  }
+end note
+
+Tima --> Client: Response
+note right
+  {
+    "n" : "Packetnumber"
+    "u" : "User-ID"
+    "token" : "User-Token"
+  }
+end note
+
+... ...
+
+Client -> Tima: Revoke Auth
+note left
+  {
+    "u" : "User-ID"
+    "token" : "User-Token+(Packetnumber+1)"
+  }
+end note
+
+Tima --> Client: Response
+
+@enduml
