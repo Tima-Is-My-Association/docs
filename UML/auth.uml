@@ -12,7 +12,7 @@ end note
 Tima --> Client: Response
 note right
   {
-    "n" : "UTC timestamp"
+    "timestamp" : "UTC timestamp"
   }
 end note
 
@@ -22,8 +22,8 @@ note left
     "username" : "Name"
     "password" : "Password"
      "client_id   : "ID"
-     "n"             : "UTC timestamp"
-     "token"      : "client_secret + n"
+     "timestamp"             : "UTC timestamp"
+     "token"      : "client_secret + timestamp"
   }
 end note
 
