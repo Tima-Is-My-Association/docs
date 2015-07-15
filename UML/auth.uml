@@ -1,4 +1,5 @@
 @startuml
+skinparam backgroundcolor transparent
 
 Client -> Tima: Authentication request
 note left
