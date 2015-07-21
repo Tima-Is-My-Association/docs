@@ -1,0 +1,55 @@
+\documentclass[a4paper, 12pt, oneside]{scrbook}
+\usepackage[a4paper, left=3cm, right=3cm, top=4cm, bottom=5cm]{geometry}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{german}
+\usepackage{xltxtra}
+\usepackage{datetime}
+
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{width=0.8\textwidth}
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
+\usepackage{wrapfig}
+
+\usepackage{hyperref}
+\hypersetup{unicode=true, hidelinks, german}
+\usepackage[all]{hypcap}
+
+\author{Nathanael Philipp, Paul Röwer, Assen Tarlov}
+\title{Projektbericht}
+\subtitle{TIMA}
+\date{Februar 2015\\\vspace{18em}\includegraphics{cc-by.png}}
+
+\usepackage[backend=biber,citestyle=alphabetic,bibstyle=alphabetic,language=auto]{biblatex}
+\usepackage[babel]{csquotes}
+\defbibheading{bibliography}{\chapter{Literaturverzeichnis}}
+\bibliography{quellen}
+
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
+\renewcommand{\th}[0]{\superscript{th}}
+\newcommand{\st}[0]{\superscript{st}}
+\newcommand{\nd}[0]{\superscript{nd}}
+\newcommand{\rd}[0]{\superscript{rd}}
+
+\begin{document}
+\maketitle\newpage
+\tableofcontents\newpage
+\chapter{Einleitung}
+
+\chapter{Website}
+\section{Database}
+UML
+\section{API}
+API.md schöner schreiben, auth uml
+
+bisschen OAI-PMH
+
+\chapter{App}
+grundlegende APP mit Qt/Qt-quick/QML
+
+\printbibliography
+\end{document}
