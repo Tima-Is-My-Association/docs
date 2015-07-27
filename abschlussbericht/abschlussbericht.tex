@@ -18,11 +18,6 @@
 \hypersetup{unicode=true, hidelinks, german}
 \usepackage[all]{hypcap}
 
-\author{Nathanael Philipp, Felix Rauchfuß, Kai Trott}
-\title{Projektbericht}
-\subtitle{TIMA}
-\date{Februar 2015\\\vspace{18em}\includegraphics{cc-by.png}}
-
 \usepackage[backend=biber,citestyle=alphabetic,bibstyle=alphabetic,language=auto]{biblatex}
 \usepackage[babel]{csquotes}
 \defbibheading{bibliography}{\chapter{Literaturverzeichnis}}
@@ -36,20 +31,14 @@
 \newcommand{\rd}[0]{\superscript{rd}}
 
 \begin{document}
-\maketitle\newpage
-\tableofcontents\newpage
-\chapter{Einleitung}
-
-\chapter{Website}
-\section{Database}
-UML
-\section{API}
-API.md schöner schreiben, auth uml
-
-bisschen OAI-PMH
-
-\chapter{App}
-grundlegende APP mit Qt/Qt-quick/QML
-
+\input{title}
+\pagenumbering{Roman}
+\tableofcontents
+\mainmatter
+\include{einleitung}
+\include{webseite}
+\include{app}
+\include{ausblick}
+\include{zusammenfassung}
 \printbibliography
 \end{document}
