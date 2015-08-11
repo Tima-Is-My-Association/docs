@@ -39,7 +39,7 @@ class app.models.Profile {
     +languages:Language[0..*]
 }
 
-class app.models.ExcludedWord {
+class app.models.ExcludeWord {
     +id:Integer
     +updated_at:DateTime
     +created_at:DateTime
@@ -167,7 +167,7 @@ class applications.models.AuthedUser {
 }
 
 app.models.AssociationHistory "0..*" *-- "1" association.models.Association
-app.models.ExcludedWord "0..*" *-- "1" association.models.Word
+app.models.ExcludeWord "0..*" *-- "1" association.models.Word
 app.models.Profile "0..*" *-- "0..*" association.models.Language
 app.models.Newsletter "0..*" *-- "0..*" association.models.Word
 
