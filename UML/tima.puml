@@ -5,9 +5,9 @@ class association.models.Language {
     +id:Integer
     +updated_at:DateTime
     +created_at:DateTime
-    +name:String
-    +slug:String
-    +code:String
+    +name:Stringi {unique}
+    +slug:String {unique}
+    +code:String {unique}
 }
 
 class association.models.Word {
@@ -15,9 +15,9 @@ class association.models.Word {
     +updated_at:DateTime
     +created_at:DateTime
     +name:String
-    +count:BigInteger
+    +count:BigInteger=0
     +language:Language
-    unique_together(name, language)
+    unique (name, language)
 }
 
 class association.models.Association {
@@ -36,7 +36,15 @@ class app.models.Profile {
     +user:settings.AUTH_USER_MODEL
     +cultural_background:String
     +points:Float
-    +languages:Language
+    +languages:Language[0..*]
+}
+
+class app.models.ExcludedWord {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +user:settings.AUTH_USER_MODEL
+    +word:Word
 }
 
 class app.models.AssociationHistory {
@@ -53,7 +61,17 @@ class app.models.Newsletter {
     +updated_at:DateTime
     +created_at:DateTime
     +user:settings.AUTH_USER_MODEL
-    +words:Word
+    +words:Word[0..*]
+}
+
+class games.models.AssociationChain {
+    +id:Integer
+    +updated_at:DateTime
+    +created_at:DateTime
+    +user:settings.AUTH_USER_MODEL
+    +word:Word
+    +previous:AssociationChain
+    +chain_id:PositiveInteger
 }
 
 class oai_pmh.models.MetadataFormat {
@@ -125,9 +143,9 @@ class applications.models.Application {
     +id:Integer
     +updated_at:DateTime
     +created_at:DateTime
-    +name:String
-    +client_id:Srting
-    +secret:String
+    +name:String {unique}
+    +client_id:Srting {unique}
+    +secret:String {unique}
 }
 
 class applications.models.AuthRequest {
@@ -136,7 +154,7 @@ class applications.models.AuthRequest {
     +created_at:DateTime
     +user:settings.AUTH_USER_MODEL
     +timestamp:DateTime
-    unique_together = (user, timestamp)
+    unique(user, timestamp)
 }
 
 class applications.models.AuthedUser {
@@ -144,15 +162,20 @@ class applications.models.AuthedUser {
     +updated_at:DateTime
     +created_at:DateTime
     +user:settings.AUTH_USER_MODEL
-    +token:String
-    +n:BigInteger
+    +token:String {unique}
+    +n:PositiveInteger
 }
 
-app.models.AssociationHistory "0..*" *-- "0..*" association.models.Association
+app.models.AssociationHistory "0..*" *-- "1" association.models.Association
+app.models.ExcludedWord "0..*" *-- "1" association.models.Word
 app.models.Profile "0..*" *-- "0..*" association.models.Language
 app.models.Newsletter "0..*" *-- "0..*" association.models.Word
-association.models.Association "2" *-- "0..*" association.models.Word
-association.models.Word "1" *-- "0..*" association.models.Language
+
+association.models.Association "0..*" *-- "2" association.models.Word
+association.models.Word "0..*" *-- "1" association.models.Language
+
+games.models.AssociationChain "0..*" *-- "1" association.models.Word
+games.models.AssociationChain *-- games.models.AssociationChain
 
 oai_pmh.models.Header "0..*" *-- "0..*" oai_pmh.models.MetadataFormat
 oai_pmh.models.Header "0..*" *-- "0..*" oai_pmh.models.Set
