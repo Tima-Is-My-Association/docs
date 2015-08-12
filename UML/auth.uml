@@ -47,5 +47,10 @@ note left
 end note
 
 Tima --> Client: Response
+note right
+  {
+    "timestamp" : "UTC timestamp"
+  }
+end note
 
 @enduml

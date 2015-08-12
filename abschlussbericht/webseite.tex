@@ -34,8 +34,43 @@ Das Webfrontend ist die Hauptanlaufstelle für Benutzer. Hierüber kann sowohl a
 Das Webfrontend basiert auf Django, wurde zusätzlich zu HTML mit Bootstrap und JQuery erstellt, sowie zur Visualisierung D3.
 
 \section{API}
-API.md schöner schreiben, auth uml
+Damit die verschiedenen Apps mit der TIMA Datenbank kommunizieren können, haben wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich grob in drei Teile. Zum einen gibt es die Anfragen, die keiner Autorisierung bedürfen, zweitens jeden die einer Autorisierung erfordern und drittens eine OAI-PMH Schnittstelle.
 
+Eine komplette Dokumentation der API ist in der Datei API.md\footnote{\url{https://github.com/Tima-Is-My-Association/TIMA/blob/master/API.md}} im git zu finden.
+
+Im folgenden Abschnitt werden die einzelnen API Anfragen die keiner Autorisierung bedürfen näher erläutern, im darauffolgenden Abschnitt die, die eine Autorisierung benötigen, dort wird ebenfalls der Autorisationsprozess näher erläutert. Zum Schluss wird dann noch ein Abschnitt zu OAI-PMH folgen.
+
+\subsection{Nicht autorisierte Anfragen}
+\subsection{Autorisierte Anfragen}
+Zum einem soll man sich über die Apps auf die Anmelden können, zum anderen soll nicht jede beliebige App schreib zugriff auf die TIMA Datenbank haben. Aus diesem war er erforderlich, dass einige API Anfragen einer Autorisation bedürfen.
+
+Um dies zu realisieren haben wir uns zunächst bestehende Frameworks wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
+
+Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
+\begin{enumerate}
+	\item sichere Authentisierung einer App
+	\item sichere Authentisierung eines Benutzers
+	\item sicherstellen das spätere Anfragen von einem Authentisierten Benutzer kommen
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{images/auth.png}
+	\caption{Authentisierungsprozess}
+	\label{fig:auth}
+\end{figure}
+
+In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch Dargestellt. Der Client ist dabei eine App, ber die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \texttt{client\_id} und über ein \texttt{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab.
+\begin{enumerate}
+	\item Eine App sendet eine Anfrage an TIMA mit dem \texttt{username} des Benutzers und der \texttt{client\_id}. TIMA prüft diese beiden Werte auf Existenz und antwortet entweder mit \textbf{200} (HTTP Response Code) und dem aktuellen Zeitstempel oder mit \textbf{404}.
+	\item Als nächstes sendet die App die eigentliche Authentisierungsanfrage. Mit \texttt{username} und \texttt{password} des Benutzers, \texttt{client\_id} der App, dem Zeitstempel der Antwort der letzten Anfrage und einem \texttt{token} das aus dem \texttt{secret} der App und dem Zeitstempel geniert wird (SHA512).
+	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werte:
+	\begin{itemize}
+		\item[n] Paketnummer jeden Anfrage einer App muss diese um eins nach oben zählen. Als Wertebereich ist uint32 zubenutzen.
+		\item[u] eine eindeutige Benutzer-ID, die bei jeder Anfrage mit zusenden ist
+		\item[token] einem zufälligen String der bei jeder Anfrage zusammen mit \texttt{n}, der Paketnummer, in einem SHA512 Hash zu senden ist
+	\end{itemize}
+\end{enumerate}
+
+\subsection{OAI-PMH}
 bisschen OAI-PMH
-
-
