@@ -1,0 +1,79 @@
+@startuml
+
+
+
+[*] --> loggedOut
+
+state loggedOut {
+  [*] -up-> idle
+
+  state idle {
+    idle --> authRequest_api : Login [Button]
+  }
+
+  state error_public {
+    error_public --> idle : Timeout [1000 ms]
+  }
+}
+
+
+state authRequest_api {
+  authRequest_api -left-> auth_api : authRequest [Signal]
+  authRequest_api -left-> error_public : authRequestError [Signal]
+}
+
+
+state auth_api {
+  auth_api -up-> loggedIn : auth [Signal]
+  auth_api --> error_public : authError [Signal]
+}
+
+
+state loggedIn {
+  [*] --> success
+
+  loggedIn -down-> logout_api : Logout [Button]
+
+  state success {
+    success --> nextWord : Timeout [10 ms]
+  }
+
+  state error_private {
+    error_private --> loggedIn_idle : Timeout [1000 ms]
+  }
+
+  state loggedIn_idle {
+    loggedIn_idle --> loggedIn_saveAsso : isWord [Signal]
+    loggedIn_idle --> unknownWord : isWordUnknown [Signal]
+    loggedIn_idle --> exclude_word : Next Word [Signal]
+  }
+
+  state unknownWord {
+    unknownWord --> loggedIn_idle : Timeout [500 ms]
+  }
+
+  state loggedIn_saveAsso {
+    loggedIn_saveAsso --> success : saveAsso [Signal]
+    loggedIn_saveAsso --> error_private : saveAssoError [Signal]
+  }
+
+  state nextWord {
+    nextWord -right-> loggedIn_idle : nextWord
+    nextWord --> error_private : nextWordError
+  }
+
+  state exclude_word {
+    exclude_word --> success : excludeAdd [Signal]
+    exclude_word --> error_private : excludeAddError [Signal]
+  }
+}
+
+
+state logout_api {
+  logout_api -right-> loggedOut : logout [Signal]
+  logout_api -right-> error_public : logoutError [Signal]
+}
+
+
+
+@enduml
