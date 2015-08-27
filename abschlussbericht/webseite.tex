@@ -1,12 +1,12 @@
 \chapter{Assoziationsdatenbank und Website}
-Der Hauptteil von TIMA ist die Datenbank in denen die Assoziation gespeichert werden. Diese ist direkt verknüpft mir dem Webfrontend, dass sowohl der Hauptanlaufpunkt für die Benutzer ist als auch für die Apps durch die Bereitstellung einer umfassenden API.
+Der Hauptteil von TIMA ist die Datenbank in denen die Assoziation gespeichert werden. Diese ist direkt verknüpft mit dem Webfrontend, das sowohl der Hauptanlaufpunkt für die Benutzer ist als auch für die Apps durch die Bereitstellung einer umfassenden API.
 
 Im nächsten Abschnitt wird das Backend und die Datenbank genauer beschrieben. Dabei wird genauer auf den Aufbau der einzelnen Tabellen eingegangen, sowie die verschiedenen Designentscheidungen.
 
 Anschließend wird die API und die dahinter stehenden Designentscheidung genauer erläutert.
 
 \section{Backend und Datenbank}
-Für das Backend der Website haben für Django als grundlegende Technologie entschieden. Bei Django handelt es sich um ein in Python geschriebenes Webframework, das dem Model-View-Controller-Schema folgt. Django bietet unter anderem einen sehr komplexen objektrelationalen Mapper, der es ermöglicht auch komplexe Objektstrukturen abzubilden ohne die verwendete Datenbank explizit zu kennen.
+Für das Backend der Website haben wir uns für Django als grundlegende Technologie entschieden. Bei Django handelt es sich um ein in Python geschriebenes Webframework, das dem Model-View-Controller-Schema folgt. Django bietet unter anderem einen sehr komplexen objektrelationalen Mapper, der es ermöglicht auch komplexe Objektstrukturen abzubilden ohne die verwendete Datenbank explizit zu kennen.
 
 \subsection{Datenmodell}
 In \hyperref[fig:uml]{Abbildung \ref*{fig:uml}} ist das komplette Datenmodell von TIMA dargestellt. Dabei bildet das Modul \texttt{associations.models} den Kern.
@@ -20,7 +20,7 @@ In \hyperref[fig:uml]{Abbildung \ref*{fig:uml}} ist das komplette Datenmodell vo
 
 Das Modell \texttt{Language} repräsentiert die verfügbaren Sprachen der Wörter, das Modell \texttt{Word} die einzelnen Wörter, wobei ein Wort, wenn es in mehreren Sprachen existiert, für jede Sprache einen eigenen Eintrag hat und das Modell \texttt{Association} die Assoziation zwischen zwei Wörtern. Zusätzlich wird bei einem Wort gespeichert, wie oft dieses gefragt wurde und bei der Assoziation wir häufig diese gegeben wurde.
 
-Die Modelle des Moduls \texttt{app.models} behandeln grundlegende Funktionen des Benutzermanagements. So zum Beispiel das Modell \texttt{Profile}, dass den Kulturellen Hintergrund, die Punktzahl und die Sprachen für die ein Benutzer assoziiert hat, speichert. In dem Modell \texttt{AssociationHistory} wird die gesamte Assoziationsgeschichte eines Benutzers gespeichert, mit den jeweils für eine Assoziation erhaltenen Punkte. Das Modell \texttt{ExcludeWord} enthält für jeden Benutzer die Wörter, die er übersprungen hat (siehe TODO ref), diese werden automatisch nach sieben Tagen gelöscht. Das letzte Modell in diesem Modul speichert für jeden Benutzer welche Worte er in seinem Newsletter empfangen möchte.
+Die Modelle des Moduls \texttt{app.models} behandeln grundlegende Funktionen des Benutzermanagements. So zum Beispiel das Modell \texttt{Profile}, das den Kulturellen Hintergrund, die Punktzahl und die Sprachen für die ein Benutzer assoziiert hat, speichert. In dem Modell \texttt{AssociationHistory} wird die gesamte Assoziationsgeschichte eines Benutzers gespeichert, mit den jeweils für eine Assoziation erhaltenen Punkte. Das Modell \texttt{ExcludeWord} enthält für jeden Benutzer die Wörter, die er übersprungen hat (siehe TODO ref), diese werden automatisch nach sieben Tagen gelöscht. Das letzte Modell in diesem Modul speichert für jeden Benutzer welche Worte er in seinem Newsletter empfangen möchte.
 
 Das Modul \texttt{games.models} enthält Modelle die für verschiedenen Spiele wichtig sind. Dies ist im Moment nur AssoziationsKette (vgl. TODO ref), hierfür werden in dem Modul \texttt{AssociationChain} die letzte/aktuelle Assoziationskette eines Benutzer gespeichert. Diese wird bei jedem Start eines Spieles gelöscht.
 
@@ -29,16 +29,22 @@ Für die Kommunikation zwischen App und Backend, insbesondere die schreib Zugrif
 Das letzte Modul und die beinhalteten Modell sind für das OAI-PMH erforderlich siehe dafür (TODO ref).
 
 \section{Webfrontend}
-Das Webfrontend ist die Hauptanlaufstelle für Benutzer. Hierüber kann sowohl anonym als auch angemeldet Assoziationen eingegeben, Wörter und deren Assoziationen angesehen und weitere Funktionen (Rangliste, Statistik) aufgerufen werden.
+Das Webfrontend ist die Hauptanlaufstelle für Benutzer. Hierüber kann er sowohl anonym als auch angemeldet Assoziationen eingegeben, Wörter und
+deren Assoziationen ansehen und weitere Funktionen (Rangliste, Statistik)
+aufrufen.
 
 Das Webfrontend basiert auf Django, wurde zusätzlich zu HTML mit Bootstrap und JQuery erstellt, sowie zur Visualisierung D3.
 
 \section{API}
-Damit die verschiedenen Apps mit der TIMA Datenbank kommunizieren können, haben wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich grob in drei Teile. Zum einen gibt es die Anfragen, die keiner Autorisierung bedürfen, zweitens jeden die einer Autorisierung erfordern und drittens eine OAI-PMH Schnittstelle.
+Damit die verschiedenen Apps mit der TIMA Datenbank kommunizieren können, haben
+wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich
+grob in drei Teile gliedern. Zum einen gibt es die Anfragen, die keiner
+Autorisierung bedürfen, zweitens jene die einer Autorisierung erfordern und
+drittens eine OAI-PMH Schnittstelle.
 
 Eine komplette Dokumentation der API ist in der Datei API.md\footnote{\url{https://github.com/Tima-Is-My-Association/TIMA/blob/master/API.md}} im git zu finden.
 
-Im folgenden Abschnitt werden die einzelnen API Anfragen die keiner Autorisierung bedürfen näher erläutern, im darauffolgenden Abschnitt die, die eine Autorisierung benötigen, dort wird ebenfalls der Autorisationsprozess näher erläutert. Zum Schluss wird dann noch ein Abschnitt zu OAI-PMH folgen.
+Im folgenden Abschnitt werden die einzelnen API Anfragen die keiner Autorisierung bedürfen näher erläutern, im darauffolgenden Abschnitt die, welche eine Autorisierung benötigen. Dort wird ebenfalls der Autorisationsprozess näher erläutert. Zum Schluss wird dann noch ein Abschnitt zu OAI-PMH folgen.
 
 \subsection{Nicht autorisierte Anfragen}
 Die API-Anfragen, die keiner Autorisation bedürfen sind allgemeine Anfragen, an die Assoziationsdatenbank, die auch über die Webseite ohne eine Anmeldung erfolgen können.
@@ -52,7 +58,7 @@ Die API-Anfragen, die keiner Autorisation bedürfen sind allgemeine Anfragen, an
 \paragraph{Wörter} Um entweder ein einzelnes Wort oder eine Liste von Wörtern ist diese Anfrage bestimmt. Es können optional Wort-IDs, Sprache oder ein Limit für die Anzahl der Assoziationen pro Wort angegeben werden. Das JSON-Objekt der Antwort enthält unter anderem zu jedem Wort einen Link zur Website des Wortes, ein Link zu dieser Anfrage mit der Auswahl auf das einzelne Wort und der OAI-PMH identifier des Wortes.
 
 \subsection{Autorisierte Anfragen}
-Zum einem soll man sich über die Apps auf die Anmelden können, zum anderen soll nicht jede beliebige App schreib zugriff auf die TIMA Datenbank haben. Aus diesem war er erforderlich, dass einige API Anfragen einer Autorisation bedürfen.
+Zum einem soll man sich über die Apps auf die Anmelden können, zum anderen soll nicht jede beliebige App schreib zugriff auf die TIMA Datenbank haben. Aus diesem Grund war es erforderlich, dass einige API Anfragen einer Autorisation bedürfen.
 
 Um dies zu realisieren haben wir uns zunächst bestehende Frameworks wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
 
@@ -63,18 +69,18 @@ Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 	\item sicherstellen das spätere Anfragen von einem Authentisierten Benutzer kommen
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=\textwidth]{images/auth.png}
 	\caption{Authentisierungsprozess}
 	\label{fig:auth}
 \end{figure}
 
-In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch Dargestellt. Der Client ist dabei eine App, ber die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \texttt{client\_id} und über ein \texttt{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab.
+In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch Dargestellt. Der Client ist dabei eine App, über die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \texttt{client\_id} und über ein \texttt{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab.
 \begin{enumerate}
 	\item Eine App sendet eine Anfrage an TIMA mit dem \texttt{username} des Benutzers und der \texttt{client\_id}. TIMA prüft diese beiden Werte auf Existenz und antwortet entweder mit \textbf{200} (HTTP Response Code) und dem aktuellen Zeitstempel oder mit \textbf{404}.
 	\item Als nächstes sendet die App die eigentliche Authentisierungsanfrage. Mit \texttt{username} und \texttt{password} des Benutzers, \texttt{client\_id} der App, dem Zeitstempel der Antwort der letzten Anfrage und einem \texttt{token} das aus dem \texttt{secret} der App und dem Zeitstempel geniert wird (SHA512).
-	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werte:
+	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werten:
 	\begin{itemize}
 		\item[n] Paketnummer jeden Anfrage einer App muss diese um eins nach oben zählen. Als Wertebereich ist uint32 zubenutzen.
 		\item[u] eine eindeutige Benutzer-ID, die bei jeder Anfrage mit zusenden ist
@@ -83,4 +89,7 @@ In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozes
 \end{enumerate}
 
 \subsection{OAI-PMH}
-Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum sammeln von Metadaten. Diese haben wir implementiert und wir liefern darüber Metadaten zu den einzelnen Wörtern aus und in einem sehr geringem Maße über die Benutzer.
+Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting)
+handelt es sich um ein auf XML basierendes Protokoll zum sammeln von Metadaten.
+Diese haben wir implementiert und wir liefern darüber Metadaten zu den
+einzelnen Wörtern aus und in einem sehr geringem Maße über die Benutzer.
