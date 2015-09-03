@@ -9,9 +9,11 @@ Fehler im Protokoll oder Verbesserungen dessen aufzuzeigen und zu beheben.
 
 \section{Framework}
 Als Framework wurde sich für Qt5 entschieden Aufgrund der weitreichenden
-Unterstützung des Frameworks von Endgeräten.\\ Es wurde zudem Java in betracht
-bezogen, da dies vorrangig auf Mobilen Geräten Verwendung findet. Allerdings
-wurde sich aus Sympathiegründen des Entwicklers dagegen entschieden.
+Unterstützung des Frameworks von Endgeräten.
+
+Es wurde zudem Java in betracht bezogen, da dies vorrangig auf Mobilen Geräten
+Verwendung findet. Allerdings wurde sich aus Sympathiegründen des Entwicklers
+dagegen entschieden.
 
 \section{Aufbau}
 Die innere Logik wird durch einen Zustandsautomaten dargestellt um
@@ -35,23 +37,25 @@ akzeptierte Applikationen Schreibrechte für die Datenbank zu geben.  Das Ausles
 der Informationen bliebt jedoch davon unangetastet, sofern es sich nicht um Benutzer spezifische Daten handelt, und ist nach wie vor für
 jeden offen.
 
-\subsection*{Sicherheitsplanung}
+\paragraph{Sicherheitsplanung}
 Zuerst wurde eine Verschlüsselung mit PGP geplant, um eine
 vollständige \glqq Ende zu Ende\grqq~Verbindung herzustellen und auch \glqq Man
 in the Middle\grqq~Atacken auszuschließen. Doch aufgrund von erhöhtem
-Programmieraufwand wurde hierauf verzichtet.\\
+Programmieraufwand wurde hierauf verzichtet.
 
 Als zweites wurde eine Implementierung vom OAuth2-Standard versucht.
 Die Anforderungen bestanden hierbei an einem geheimen Schlüssel in der
 Applikation, dem Ausschluss einer Replay-Attacke und dem Verwenden von
-User eigenen Passwörtern.\\
+User eigenen Passwörtern.
+
 Im Standard sind 4 verschiedene \glqq Authorization Grants\grqq~
 definiert\footnote{siehe \url{https://tools.ietf.org/html/rfc6749\#section-1.3}}
-jedoch erfüllt keine davon jede Anforderung an das gewünschte Protokoll.\\
+jedoch erfüllt keine davon jede Anforderung an das gewünschte Protokoll.
 
 Zuletzt wurde sich für eine Eigenentwicklung entschieden um sowohl den Arbeitsaufwand
 klein zu halten, als auch alle Anforderungen ausreichend zu erfüllen.
-Eine kleine Übersicht ist in Abbildung \ref{fig:uml} zu sehen.\\
+Eine kleine Übersicht ist in Abbildung \ref{fig:uml} zu sehen.
+
 Die Übertragung erfolgt mit JSON Objekten um das Parsen zu erleichtern und
 einen üblichen Standard zu verwenden. Der Rechenaufwand des Servers wurde
 zudem versucht so gering wie möglich zu halten, um mögliche DDOS Angriffe
@@ -63,19 +67,23 @@ Der Client sendet eine Authentisierungsanfrage an den Server mit seinem
 Benutzernamen und einer Applikations-Identifikationsnummer. Der Nutzername
 dient dem Server zur Zuordnung zum Benutzerprofil und die Identifikationsnummer
 regelt die Zugehörigkeit der verwendeten Applikation. Es werden nur registrierte
-Applikationen akzeptiert.\\
+Applikationen akzeptiert.
+
 Bei korrekten Informationen sendet der Server seine aktuelle Uhrzeit zurück
 und speichert diese unter dem angegebenen Nutzerprofil ab. Dieser Zeitstempel
 wird für die Signierung der weiteren Pakete verwendet und um nicht wiederkehrende
-Signaturen zu erzwingen.\\
+Signaturen zu erzwingen.
+
 Im nächsten Schritt erstellt der Client das eigentliche Authentisierungs Paket mit
 seinem Benutzernamen, seinem Passwort, der Identifikationsnummer, dem Zeitstempel
 und einem Token als Signatur, welcher aus dem Hash des Zeitstempels und dem
 konkatenierten Applikations-Geheimnis besteht. Als Hashmethode wurde hierbei
-SHA-512 verwendet.\\
+SHA-512 verwendet.
+
 Nachdem der Server alle Angaben überprüft hat und die Signatur korrekt
 verifizieren konnte, erhält der Client eine laufende Paketnummer, einen für ihn
-geltende Benutzer-Identifikationsnummer und einen Usertoken.\\
+geltende Benutzer-Identifikationsnummer und einen Usertoken.
+
 Für jede weitere API Abfrage muss mindestens die Benutzer-Identifikationsnummer
 und eine Signatur bestehend aus dem SHA-512 Hash des Usertoken konkateniert mit
 der Paketnummer verschickt werden. Nach jeder erfolgreichen API Anfrage welche
@@ -87,24 +95,43 @@ fängt danach wieder bei 0 an.
 \section{Spiele}
 Um mehr Nutzer zu erzielen sind verschiedene Spiele geplant worden, die jedoch
 aus Zeitgründen nicht in den geplanten Zeitrahmen passten.
-
 Als Grundlage wird jedoch in den meißten Fällen schon eine gut gefüllte Datenbank
-vorausgesetzt. Im den folgenden Abschnitten werden kurz die Spiele Assoziationskette und Familienduell.
+vorausgesetzt. In den folgenden Abschnitten, werden kurz die Spiele
+Assoziationskette und Familienduell in ihrer Funktion beschrieben und der Nutzen
+für die Datenbank näher erläutert.
 
-\subsection*{Assoziationskette}
-TODO
+\paragraph{Assoziationskette}
+Die Spieler assoziieren nacheinander auf die jeweilige Assoziation ihres
+Vorgängers. Dadurch Bildet sich eine Kette mehrerer Assoziationen bis
+zu bestimmten Abbruchbedingungen. Ein mögliches Ende stellt das assoziieren
+eines schonmal verwendeten Wortes dar und die damit verbundene Schließung eines
+Kreises in der Kette. Das Spiel ist ebenfalls beendet, sollte einem Spieler
+keine weitere Assoziation zeitnah einfallen. Bei einem Computergegner wird
+so lange wie möglich versucht die Abschlusskriterien nicht zu erfüllen, damit
+der Spieler selbst in den meißten Fällen dafür verantwortlich ist.
 
-\subsection*{Familienduell}
-Da dieses Spiel die größte Beliebtheit verspricht, sei hier noch einmal kurz
-die Funktionsweise erklärt.\\
-Der Name soll hierbei nur die Ausrichtung des Spieles näher bringen.
-Wie bei der
+Alle gegebenen Assoziationen des Spielers werden hierbei mit Punkten belohnt
+und für die Datenbank verwendet.Die Gesammtlänge der Kette wird nochmal extra
+als Bonus berechnet, hat jedoch keine Auswirkungen auf die Datensätze in der
+Datenbank.
+
+\paragraph{Familienduell}
+Der Name soll hierbei nur die Ausrichtung des Spieles näher bringen,
+denn wie bei der
 Fernsehserie\footnote{siehe \url{https://de.wikipedia.org/wiki/Familien-Duell}},
 werden dem Benutzer verschiedene verdeckte Antworten auf eine Frage gezeigt
 und für jede richtig gegebene Antwort erhält der Spieler Punkte.
-Die Fragen sind jedoch ausschließlich die meist genannten Assoziationen zu einem
-bestimmten Wort. Zusätzlich sollte eine Zeitbegrenzung eingehalten werden, da ja
-alle Korrekten Antworten auf TIMA nachgeschaut werden können.
+Die Fragen sind jedoch im Unterschied zum Fernsehen, ausschließlich die meist
+genannten Assoziationen zu einem bestimmten Wort. Zusätzlich sollte eine
+Zeitbegrenzung eingehalten werden, da ja alle Korrekten Antworten auf TIMA
+nachgeschaut werden können und so einem möglichen Betrug entgegen gewirkt werden
+kann. Je nach Schwierigkeitsgrad kann ein Zeitbonus für korrekte Assoziationen
+gegeben werden und ein Malus bei falschen Antworten. Die Einwirkung auf das
+Spielvergnügen müsste entsprechend getestet werden.
+
+Jede gegebene Antwort wird für das füllen der Datenbank verwendet, obgleich
+es eine gesuchte Lösung war oder nicht. Punkte erhält der Spieler jedoch nur
+für richtige Lösungen und einen Bonus wenn er alle Lösungen findet.
 
 
 
