@@ -134,8 +134,6 @@ In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozes
 \end{enumerate}
 
 \subsection{OAI-PMH}\label{sec:oai-pmh}
-Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting)
-handelt es sich um ein auf XML basierendes Protokoll zum sammeln von Metadaten.
-Diese haben wir implementiert und wir liefern darüber Metadaten zu den
-einzelnen Wörtern aus und in einem sehr geringem Maße über die Benutzer.
-%TODO mehr!!
+Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum Sammeln von Metadaten. Es wird dabei unterschieden zwischen Data Providern und Service Providern. Ein Data Provider betreibt ein oder mehrere Repositories, die OAI-PMH unterstützen um Metadaten bereitzustellen. Service Provider sammeln die Metadaten der Data Providern und bieten Mehrwertdienste an.
+
+Wir haben das OAI-PMH Protokoll implementiert um Metadaten zu den gesammelten Assoziationen bereitzustellen. Wir stellen dabei Metadaten zu den Wörtern und im geringen Maße zu den Benutzern bereit.
