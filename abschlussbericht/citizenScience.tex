@@ -1,0 +1,94 @@
+\chapter{TIMA als Citizen Science Projekt}
+
+In einem Citizen Science Projekt sind zusätzliche Schwerpunkte zu beachten als in einem gewöhnlichen Informatikprojekt. Die Nutzer sind keine bezahlten oder interessierten Angestellten, sondern zielt auf die breite Masse. Nur mit einer großen Anzahl Nutzer lassen sich die Menge Daten sammeln, die die Assoziastionsdatenbank sinnvoll macht. So nutzen wir die Intelligenz der Masse, die wichtigsten Assoziationen zu einem bestimmten Wort zu finden. Es ergeben sich zwei Themen, die in den meisten anderen Projekten nicht so gewichtig sind.
+
+In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen dazu motiviert, etwas zum Projekt beizutragen. Dabei fokusieren wir uns auf \textbf{Spiele}, um einen Anreiz zum Mitwirken zu geben.
+
+\section{Spiele}\label{subsec:games}
+Wir nutzen einen spielerischen Ansatz für das Eintragen von Assoziationen, um Menschen zur Mitarbeit bei TIMA zu motivieren.
+
+In der ersten Spielvariante wurde dem Nutzer ein Wort aus der Datenbank übergeben und dieser sollte seine Assoziation dazu geben. Danach wurde gegebenenfalls das neue Wort in die Datenbank übertragen und die Assoziation gespeichert. Zuletzt erhielt ein registrierter Nutzer eine bestimmte Menge an Punkten. Auf der Webseite bieten wir das Einsehen der momentan besten Spieler an. Wir erhoffen uns durch diesen Wettbewerbsgedanken weitere Motivation für unsere Nutzer.
+
+
+\subsection{Wortselektierungsalgorithmus}\label{subsec:wortselektierungsalgorithmus}
+In diesem Abschnitt wird die Funktionsweise des Wortselektierungsalgorithmus genauer beschrieben. In der Datenbank ist es wünschenswert, dass jedes Wort mindestens eine Assoziation hat und zusätzlich ein ungefähres Gleichgewicht an Assoziationen verteilt zwischen allen Worten herrscht. Der Wortselektierungsalgorithmus ist zuständig für das Auswählen der Worte, für die eine Assoziation gegeben werden soll, damit diese Eigenschaften erreicht werden. Folgende Kriterien müssen erfüllt werden:
+
+\begin{itemize}
+	\item Jeder Benutzer soll möglichst zu jedem Wort mindestens eine Assoziation geben.
+	\item Wörter, die wenig assoziiert wurden, entweder insgesamt oder von einem einzelnen Benutzer, sollten für diesen Nutzer bevorzugt werden.
+	\item Wörter sollen ausgeschlossen werden können, um z.B. zu verhindern, dass das selbe Wort mehrmals hintereinander kommt.
+\end{itemize}
+
+Der Algorithmus, der diese Anforderungen erfüllt, sieht folgendermaßen aus:
+
+\begin{lstlisting}[basicstyle=\ttfamily,
+backgroundcolor=\color{lightgray},
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+columns=fixed,
+frame=lines,
+numbers=left,
+numbersep=5pt,
+breaklines=true,
+captionpos=t,
+caption=Wortselektierungsalgorithmus]
+w = [alle Worter einer Sprache]
+w = w - [alle auszuschließenden Wörter]
+if ( Annonymer Benutzer )
+    w = [15 Wörter mit niedrigstem Häufigkeit aus w]
+else
+    w = w - [alle auszuschließenden Wörter des Benutzers]
+    w = [15 Wörter mit niedrigstem Auftreten in der AssociationHistory des Buntzers1 aus w]
+return [zufälliges Wort aus w]
+\end{lstlisting}
+
+\subsection{ExcludeWords}\label{subsec:excludewords}
+Falls ein Benutzer zu einem Wort keine Assoziation einfällt, hat er die Möglichkeit das Wort zu überspringen. Damit er nun nicht in kurzer Zeit wiederholt danach gefragt wird (vgl. \hyperref[subsec:wortselektierungsalgorithmus]{Abschnitt \ref*{subsec:wortselektierungsalgorithmus}}), wird das Wort auf eine Ausschlussliste gesetzt. Einträge die älter als 7 Tage sind, werden automatisch von der Liste gelöscht. Danach wird der Benutzer erneut nach seiner Assoziation zu diesem Wort gefragt.
+
+%FIXME: subsection Punkte?
+
+\subsection{Assoziationskette}
+Dieses Spiel sollte für einen Nutzer deutlich interessanter sein, als zu beinahe kontextfreien Worten hintereinander Assoziationen einzutragen. Vorraussetzung für dieses Spiel ist jedoch eine bereits gefüllte Assoziationsdatenbank. Das Spiel Assoziationskette funktioniert folgendermaßen:
+
+Die Spieler assoziieren nacheinander auf die jeweilige Assoziation ihres
+Vorgängers. Dadurch Bildet sich eine Kette mehrerer Assoziationen bis
+zu bestimmten Abbruchbedingungen. Ein mögliches Ende stellt das Assoziieren
+eines schonmal verwendeten Wortes dar und die damit verbundene Schließung eines
+Kreises in der Kette. Das Spiel ist ebenfalls beendet, sollte einem Spieler
+keine weitere Assoziation zeitnah einfallen. Bei einem Computergegner wird
+so lange wie möglich versucht die Abschlusskriterien nicht zu erfüllen, damit
+der Spieler selbst in den meisten Fällen dafür verantwortlich ist.
+
+Alle gegebenen Assoziationen des Spielers werden hierbei mit Punkten belohnt
+und für die Datenbank verwendet.Die Gesamtlänge der Kette wird nochmal extra
+als Bonus berechnet, hat jedoch keine Auswirkungen auf die Datensätze in der
+Datenbank.
+
+Das Spiel Assoziationskette steht als Variante mit einem Computergegner momentan sowohl auf der Webseite, als auch als App zur Verfügung. Der Computer wählt dabei seine Assoziation zufällig aus den 10 am meisten gewählten Assoziationen aus der Datenbank zu dem gegebenen Wort.
+
+\section{Newsletter}\label{subsec:newsletter}
+Ein weiteres Feature über das TIMA verfügt, ist der Newsletter. Falls ein Benutzer möchte, kann er auf der Webseite Wörter auswählen, die ihn interessieren und wöchentlich darüber einen Newsletter erhalten, in dem zu jedem Wort die Assoziationen mit deren Häufigkeit enthalten sind. Durch die regelmäßig Erinnerung könnte sich ein Nutzer motiviert fühlen, erneut an einem Spiel für TIMA teilzunehmen.
+
+\section{Datenqualität}
+Um die Datenqualität  in der Datenbank zu sichern, setzen wir auf drei Dinge:
+
+\begin{enumerate}
+	\item Rechtschreibprüfung
+	\item Mengenrelevanz
+	\item Nutzermanagment
+\end{enumerate}
+
+\subsubsection{Rechtschreibung}
+Die naheliegenste Überprüfung, um die Datenquailtät zu gewährleisten, ist eine Rechtschreibkontrolle. Dabei wird ein eingegebenes Wort mit einer Datenbank abgeglichen, die aus mehreren Wortschätzen der entsprechenden Sprache zusammengefügt ist. Momentan ist dies nur für Deutsch umgesetzt und besteht aus folgenden Datenbanken: %FIXME
+
+Befindet sich ein eingegebenes Wort nicht in dieser Datenbank, wird der Nutzer vor der entgültigen Abgabe gefragt, ob er diese Eingabe wirklich tätigen möchte. Bestätigt er dies, bekommt er für diese Assoziation wie gehabt Punkte, jedoch wird das Wort nicht in die Datenbank übertragen. Wir gehen davon aus, dass Worte, die nicht in der Verbindung dieser schon für sich genommen umfassenden Datenbanken zu finden sind, in der Assoziationsdatenbank vernachlässigbar sind.
+
+
+\subsubsection{Mengenrelevanz}
+Mit einer Rechtschreibprüfung lässt sich natürlich nicht verhindern, dass ein Nutzer falsche oder unrelevante Daten eingibt. Ob eine Assoziation falsch ist, kann man natürlich von außerhalb nicht entscheiden. Jeder Mensch hat eigene Assoziationen zu bestimmten Worten.
+
+Wir betrachten eine Assoziation als richtig, wenn sie im Allgemeinen nachvollziehbar ist. Gibt ein Nutzer jetzt eine Assoziation ein, die diesem Anspruch nicht genügt, ob mutwillig oder nicht, kann man davon ausgehen, dass andere Menschen diese Assoziation nicht geben. In der Datenbank wird eine falsche Assoziation also statistisch irrevelant.
+
+\subsubsection{Nutzermanagement}
+Ein weiteres mächtiges Werkzeug zur Vermeidung von Vandalismus ist die Nutzerkontrolle. In der Datenbank werden alle Assoziationen gespeichert, die ein Nutzer jemals gegeben hat. Sollte ein Nutzer auffällig werden, zum Beispiel, weil er innerhalb sehr kurzer Zeit sehr viele Punkte in Spielen erreicht, kann er überprüft werden. Sollte bei einer solchen Überprüfung auffallen, dass seine Assoziationen sehr oft nicht dem allgemeinen Verständnis entsprechen, können diese Eintragungen aus der Datenbank gelöscht werden. Dieser Vorgang ist momentan nicht automatisiert.

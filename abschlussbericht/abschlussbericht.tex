@@ -5,12 +5,11 @@
 \setdefaultlanguage{german}
 \newcommand\glqq{"`}
 \newcommand\grqq{"'}
+
 \usepackage{xltxtra}
 \usepackage{datetime}
 \usepackage{listings}
 
-\usepackage{color}
-\usepackage[table]{xcolor}
 \usepackage{caption}
 \captionsetup{width=0.8\textwidth}
 \usepackage{chngcntr}
@@ -26,6 +25,8 @@
 \defbibheading{bibliography}{\chapter{Literaturverzeichnis}}
 \bibliography{quellen}
 
+\usepackage{color}
+\usepackage[table]{xcolor}
 \definecolor{lightgray}{rgb}{.95,.95,.95}
 
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
@@ -41,6 +42,7 @@
 \tableofcontents
 \mainmatter
 \include{einleitung}
+\include{citizenScience}
 \include{webseite}
 \include{app}
 \include{ausblick}

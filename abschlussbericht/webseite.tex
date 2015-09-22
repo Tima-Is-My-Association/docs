@@ -1,15 +1,13 @@
-\chapter{Assoziationsdatenbank und Website}
-Der Hauptteil von TIMA ist die Datenbank in denen die Assoziation gespeichert werden. Diese ist direkt verknüpft mit dem Webfrontend, das sowohl der Hauptanlaufpunkt für die Benutzer ist als auch für die Apps durch die Bereitstellung einer umfassenden API.
+\chapter{Assoziationsdatenbank und API}
+Das Ziel von TIMA ist das Erstellen einer Datenbank, in denen Assoziation gespeichert werden. Daher liegt ein Schwerpunkt unserer Arbeit darin, diese zu Erstellen und zu Befüllen. Die Datenbank ist direkt verknüpft mit einem Webfrontend, das durch die Bereitstellung einer umfassenden API der Hauptanlaufpunkt für die Benutzer und die Apps ist.
 
-Im nächsten Abschnitt wird das Backend und die Datenbank genauer beschrieben. Dabei wird genauer auf den Aufbau der einzelnen Tabellen eingegangen, sowie die verschiedenen Designentscheidungen.
-
-Anschließend wird die API und die dahinter stehenden Designentscheidung genauer erläutert.
+In diesem Kapitel werden das Backend der Webseite und die Datenbank beschrieben. Dabei wird genauer auf die Designentscheidungen eingangen, die zum Aufbau der einzelnen Datenbankbestanteile geführt haben.
 
 \section{Backend und Datenbank}
-Für das Backend der Website haben wir uns für Django als grundlegende Technologie entschieden. Bei Django handelt es sich um ein in Python geschriebenes Webframework, das dem Model-View-Controller-Schema folgt. Django bietet unter anderem einen sehr komplexen objektrelationalen Mapper, der es ermöglicht auch komplexe Objektstrukturen abzubilden ohne die verwendete Datenbank explizit zu kennen.
+Für das Backend der Website haben wir uns für Django als grundlegende Bibliothek entschieden. Bei Django handelt es sich um ein in Python geschriebenes Webframework, das dem Model-View-Controller-Schema folgt. Django bietet unter anderem einen sehr komplexen objektrelationalen Mapper, der es ermöglicht auch komplexe Objektstrukturen abzubilden ohne die verwendete Datenbank explizit zu kennen. Neben allen notwendigen Funktionen gewährleistet Django zusätzlich also gute Wiederverwendbarkeit und wurde deshalb für das Erstellen des Backends genutzt.
 
 \subsection{Datenmodell}
-In \hyperref[fig:uml]{Abbildung \ref*{fig:uml}} ist das komplette Datenmodell von TIMA dargestellt. Dabei bildet das Modul \texttt{associations.models} den Kern.
+In \hyperref[fig:uml]{Abbildung \ref*{fig:uml}} ist das komplette Datenmodell von TIMA dargestellt. Das Modul \texttt{associations.models} spielt dabei die Schlüsselrolle. Hier werden die grundlegenden Daten für die Assoziationsdatenbank gespeichert: die Worte und deren Verknüpfungen.
 
 \begin{figure}
 	\centering
@@ -18,70 +16,26 @@ In \hyperref[fig:uml]{Abbildung \ref*{fig:uml}} ist das komplette Datenmodell vo
 	\label{fig:uml}
 \end{figure}
 
-Das Modell \texttt{Language} repräsentiert die verfügbaren Sprachen der Wörter, das Modell \texttt{Word} die einzelnen Wörter, wobei ein Wort, wenn es in mehreren Sprachen existiert, für jede Sprache einen eigenen Eintrag hat und das Modell \texttt{Association} die Assoziation zwischen zwei Wörtern. Zusätzlich wird bei einem Wort gespeichert, wie oft dieses gefragt wurde und bei der Assoziation wie häufig diese gegeben wurde.
+Das Modell \texttt{Word} speichert einzelne Wörter und das Modell \texttt{Association} die Assoziationen zwischen diesen Wörtern. Für jedes Wort wird gespeichert, wie oft für dieses nach einer Assoziation gefragt wurde. In ähnlicher Weise besitzt auch jede Assoziation in der Datenbank eine Häufigkeit, die angibt wie oft die Assoziation von Nutzern eingegeben wurde.
+Um eine Unterscheidung zwischen verschiedenen Sprachen zu ermöglichen, repräsentiert das Modell \texttt{Language} die verfügbaren Sprachen. Existiert ein Wort in mehreren Sprachen oder wird in verschiedenen Sprachen genutzt, hat es für jede Sprache einen eigenen Eintrag.
+\newline
 
-Die Modelle des Moduls \texttt{app.models} behandeln grundlegende Funktionen des Benutzermanagements. So zum Beispiel das Modell \texttt{Profile}, das den Kulturellen Hintergrund, die Punktzahl und die Sprachen für die ein Benutzer assoziiert hat, speichert. In dem Modell \texttt{AssociationHistory} wird die gesamte Assoziationsgeschichte eines Benutzers gespeichert, mit den jeweils für eine Assoziation erhaltenen Punkte. Das Modell \texttt{ExcludeWord} enthält für jeden Benutzer die Wörter, die er übersprungen hat (vgl. \hyperref[subsec:excludewords]{Abschnitt \ref*{subsec:excludewords}}), diese werden automatisch nach sieben Tagen gelöscht. Das letzte Modell in diesem Modul speichert für jeden Benutzer welche Worte er in seinem Newsletter empfangen möchte (vgl. \hyperref[subsec:newsletter]{Abschnitt \ref*{subsec:newsletter}}).
+Das Modul \texttt{games.models} enthält Modelle die für die verschiedenen Spiele wichtig sind. Dies ist im Moment nur AssoziationsKette (vgl. \hyperref[subsec:games]{Abschnitt \ref*{subsec:games}}), hierfür werden in dem Modul \texttt{AssociationChain} die letzte beziehungsweise aktuelle Assoziationskette eines Benutzer gespeichert. Diese wird beim Start eines neuen Spieles gelöscht.
+\newline
 
-Das Modul \texttt{games.models} enthält Modelle die für die verschiedenen Spiele wichtig sind. Dies ist im Moment nur AssoziationsKette (vgl. \hyperref[subsec:games]{Abschnitt \ref*{subsec:games}}), hierfür werden in dem Modul \texttt{AssociationChain} die letzte/aktuelle Assoziationskette eines Benutzer gespeichert. Diese wird bei jedem Start eines Spieles gelöscht.
 
-Für die Kommunikation zwischen App und Backend, insbesondere die schreib Zugriffe (vgl. \hyperref[sec:api]{Abschnitt \ref*{sec:api}}), zu autorisieren und dem speichert der nötigen Informationen dient das Modul \texttt{applications.models}. Das Modell \texttt{Application} speichert die Apps, die Autorisiert sind, mit den nötigen Daten für die Autorisierung (vgl. \hyperref[subsec:autorisierte_anfragen]{Abschnitt \ref*{subsec:autorisierte_anfragen}}). Die beiden anderen Modell in diesem Modul \texttt{AuthRequest} und \texttt{AuthedUser} speichern die nötigen Information für einen Benutzer der sich authentifizieren möchte und hat.
+Um grundlegende Funktionen des Benutzermanagements zu ermöglichen, wurden die Modelle des Moduls \texttt{app.models} eingeführt. Das Modell \texttt{Profile} speichert grundlegende Informationen zu jedem Nutzer, zum Beispiel die Punktzahl und die Sprachen, für die ein Benutzer assoziiert hat. Diese Daten werden in einem Ranglistensystem genutzt, das die Nutzer motivieren soll, sich gegenseitig zu messen. In dem Modell \texttt{AssociationHistory} wird die gesamte Assoziationsgeschichte eines Benutzers gespeichert, mit den jeweils für eine Assoziation erhaltenen Punkte. Somit können im Falle eines Misbrauchs die gegebenen Assoziationen aus der Datenbank gelöscht werden und dem Nutzer die Punkte entzogen werden.
+Das Modell \texttt{ExcludeWord} enthält für jeden Benutzer die Wörter, die er innerhalb der letzten sieben Tage übersprungen hat (vgl. \hyperref[subsec:excludewords]{Abschnitt \ref*{subsec:excludewords}}). Das letzte Modell in diesem Modul speichert für jeden Benutzer welche Worte er in seinem Newsletter empfangen möchte.
+\newline
+
+Für die Kommunikation zwischen App und Backend, insbesondere der Autorisierung der Schreibzugriffe auf die Datenbank (vgl. \hyperref[sec:api]{Abschnitt \ref*{sec:api}}) dient das Modul \texttt{applications.models}. Das Modell \texttt{Application} speichert die Apps, die Autorisiert sind, mit den nötigen Daten für die Autorisierung (vgl. \hyperref[subsec:autorisierte_anfragen]{Abschnitt \ref*{subsec:autorisierte_anfragen}}). Die beiden anderen Modelle dieses Moduls \texttt{AuthRequest} und \texttt{AuthedUser} speichern die nötigen Information für einen Benutzer der sich authentifizieren möchte oder sich bereits authentifiziert hat. Durch dieses Modul wird also gewährleistet, dass nur Nutzer auf die Datenbank zugreifen können, die eine von uns autorisierte Anwendung nutzt.
+\newline
 
 Das letzte Modul und die beinhalteten Modell sind für das OAI-PMH erforderlich siehe dafür (vgl. \hyperref[sec:oai-pmh]{Abschnitt \ref*{sec:oai-pmh}}).
 
-\section{Webfrontend}
-Das Webfrontend ist die Hauptanlaufstelle für Benutzer. Hierüber kann er sowohl anonym als auch angemeldet Assoziationen eingegeben, Wörter und
-deren Assoziationen ansehen und weitere Funktionen (Rangliste, Statistik)
-aufrufen.
-
-Das Webfrontend basiert auf Django, wurde zusätzlich zu HTML mit Bootstrap und JQuery erstellt, sowie zur Visualisierung D3.
-
-Im folgenden werden nun einige Funktionalitäten noch einmal einzeln kurz erläutert und beschrieben.
-
-\subsection{Wortselektierungsalgorithmus}\label{subsec:wortselektierungsalgorithmus}
-In diesem Abschnitt wird die Funktionsweise des Wortselektierungsalgorithmus genauer beschrieben. Der Wortselektierungsalgorithmus ist zuständig für das auswählen der Worte die assoziiert werden sollen. Folgende Anforderungen sollen dabei erfüllt werden:
-
-\begin{itemize}
-	\item Jedes Wort soll möglichst mindestens eine Assoziation haben.
-	\item Jeder Benutzer soll möglichst zu jedem Wort mindestens eine Assoziation geben.
-	\item Wörter, die wenig assoziiert wurden, entweder insgesamt oder von einem einzelnen Benutzer, bevorzugen.
-	\item Wörter sollen ausgeschlossen werden können, um z.B. zu verhindern, dass das selbe Wort mehrmals hintereinander kommt.
-\end{itemize}
-
-Der Algorithmus der diese Anforderungen erfüllt sieht folgendermaßen aus:
-
-\begin{lstlisting}[basicstyle=\ttfamily,
-backgroundcolor=\color{lightgray},
-showspaces=false,
-showstringspaces=false,
-showtabs=false,
-columns=fixed,
-frame=lines,
-numbers=left,
-numbersep=5pt,
-breaklines=true,
-captionpos=t,
-caption=Wortselektierungsalgorithmus]
-w = [alle Worter einer Sprache]
-w = w - [alle auszuschließenden Wörter]
-if ( Annonymer Benutzer )
-    w = [15 Wörter mit niedrigstem Häufigkeit aus w]
-else
-    w = w - [alle auszuschließenden Wörter des Benutzers]
-    w = [15 Wörter mit niedrigstem Auftreten in der AssociationHistory des Buntzers1 aus w]
-return [zufälliges Wort aus w]
-\end{lstlisting}
-
-\subsection{ExcludeWords}\label{subsec:excludewords}
-Falls ein Benutzer zu einem Wort keine Assoziation einfällt, hat er die Möglichkeit das Wort zu überspringen. Damit er nicht ständig danach gefragt wird (vgl. \hyperref[subsec:wortselektierungsalgorithmus]{Abschnitt \ref*{subsec:wortselektierungsalgorithmus}}), wird das Wort auf eine Ausschlussliste gesetzt. Einträge die älter als 7 Tage sind werden automatisch von der Liste gelöscht. Zu diesem Zeitpunkt, wird der Benutzer dann wieder gefragt dieses Wort zu assoziieren.
-
-\subsection{Spiele}\label{subsec:games}
-Die Idee mit den Spielen kam hauptsächlich durch die Apps (vgl. \hyperref[sec:spiele]{Abschnitt \ref*{sec:spiele}}). Allerdings haben wir uns dazu entschieden einzelne Spiele auch auf der Website anzubieten. Derzeit ist nur das Spiel AssoziationsKette verfügbar.
-
-\subsection{Newsletter}\label{subsec:newsletter}
-Ein weiteres Feature über das TIMA verfügt ist der Newsletter. Hier kann jeder Benutzer Wörter auswählen, die ihn interessieren und wöchentlich darüber einen Newsletter erhalten, in dem zu jedem Wort die Assoziationen mit deren Häufigkeit enthalten sind.
 
 \section{API}\label{sec:api}
-Damit die verschiedenen Apps mit der TIMA Datenbank kommunizieren können, haben
+Damit verschiedene Apps mit der TIMA Datenbank kommunizieren können, haben
 wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich
 grob in drei Teile gliedern. Zum einen gibt es die Anfragen, die keiner
 Autorisierung bedürfen, zweitens jene die einer Autorisierung erfordern und
@@ -89,29 +43,29 @@ drittens eine OAI-PMH Schnittstelle.
 
 Eine komplette Dokumentation der API ist in der Datei API.md\footnote{\url{https://github.com/Tima-Is-My-Association/TIMA/blob/master/API.md}} im git zu finden.
 
-Im folgenden Abschnitt werden die einzelnen API Anfragen die keiner Autorisierung bedürfen näher erläutern, im darauffolgenden Abschnitt die, welche eine Autorisierung benötigen. Dort wird ebenfalls der Autorisierungsprozess näher erläutert. Zum Schluss wird dann noch ein Abschnitt zu OAI-PMH folgen.
+Im folgenden Abschnitt werden die einzelnen API Anfragen erläutert, zuerst die autorisierungsfreien, dann jene, die eine Autorisierung benötigen. Zum Schluss wird dann noch ein Abschnitt zu OAI-PMH folgen.
 
 \subsection{Nicht autorisierte Anfragen}
 Die API-Anfragen, die keiner Autorisierung bedürfen sind allgemeine Anfragen, an die Assoziationsdatenbank, die auch über die Webseite ohne eine Anmeldung erfolgen können.
 
 \paragraph{Rangliste} Eine dieser Anfragen ist die nach der Rangliste. Es werden keine weiteren Angaben benötigt und als Antwort kommt ein JSON-Object, das eine Liste der Benutzer enthält, mit den gleichen Daten wie sie über die Webseite einsehbar sind.
 
-\paragraph{Statistik} Ebenso ist die Statistik über die API abfragbar.
+\paragraph{Statistik} Ebenso ist die Statistik über die API abfragbar. Diese enthält aktuelle Zahlen über Nutzerzahl, Wortmenge und Assoziationen in der Datenbank.
 
 \paragraph{Sprachen} Es kann eine Liste aller Sprachen in TIMA angefordert werden, hier ist neben dem Namen, der Sprach-Code in der Antwort enthalten, der bei vielen anderen Anfragen als Parameter angegeben werden muss.
 
 \paragraph{Wörter} Um entweder ein einzelnes Wort oder eine Liste von Wörtern ist diese Anfrage bestimmt. Es können optional Wort-IDs, Sprache oder ein Limit für die Anzahl der Assoziationen pro Wort angegeben werden. Das JSON-Objekt der Antwort enthält unter anderem zu jedem Wort einen Link zur Website des Wortes, ein Link zu dieser Anfrage mit der Auswahl auf das einzelne Wort und der OAI-PMH identifier des Wortes.
 
 \subsection{Autorisierte Anfragen}\label{subsec:autorisierte_anfragen}
-Zum einem soll man sich über die Apps auf die Anmelden können, zum anderen soll nicht jede beliebige App schreib zugriff auf die TIMA Datenbank haben. Aus diesem Grund war es erforderlich, dass einige API Anfragen einer Autorisierung bedürfen.
+Autorisierte Anfragen sind notwendig, um Schreibzugriff auf die Datenbank zuzulassen. Außerdem ist eine Authentisierung notwendig, um Nutzer der App oder der Webseite eindeutig identifizieren zu können. Für die Rangliste ist das unumgänglich. Aus diesem Grund war es erforderlich, dass einige API Anfragen einer Autorisierung bedürfen.
 
 Um dies zu realisieren haben wir uns zunächst bestehende Frameworks wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
 
 Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 \begin{enumerate}
-	\item sichere Authentisierung einer App
-	\item sichere Authentisierung eines Benutzers
-	\item sicherstellen das spätere Anfragen von einem Authentisierten Benutzer kommen
+	\item Sichere Authentisierung einer App
+	\item Sichere Authentisierung eines Benutzers
+	\item Sicherstellen, das spätere Anfragen von einem authorisierten Benutzer kommen
 \end{enumerate}
 
 \begin{figure}[!h]
@@ -121,19 +75,21 @@ Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 	\label{fig:auth}
 \end{figure}
 
-In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch Dargestellt. Der Client ist dabei eine App, über die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \texttt{client\_id} und über ein \texttt{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab.
+In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch Dargestellt. Der Client ist dabei eine App, über die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \texttt{client\_id} und über ein \texttt{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab:
 \begin{enumerate}
 	\item Eine App sendet eine Anfrage an TIMA mit dem \texttt{username} des Benutzers und der \texttt{client\_id}. TIMA prüft diese beiden Werte auf Existenz und antwortet entweder mit \textbf{200} (HTTP Response Code) und dem aktuellen Zeitstempel oder mit \textbf{404}.
 	\item Als nächstes sendet die App die eigentliche Authentisierungsanfrage. Mit \texttt{username} und \texttt{password} des Benutzers, \texttt{client\_id} der App, dem Zeitstempel der Antwort der letzten Anfrage und einem \texttt{token} das aus dem \texttt{secret} der App und dem Zeitstempel geniert wird (SHA512).
 	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werten:
 	\begin{itemize}
-		\item[n] Paketnummer jeden Anfrage einer App muss diese um eins nach oben zählen. Als Wertebereich ist uint32 zubenutzen.
+		\item[n] Paketnummer - jede Anfrage einer App muss diese um eins nach oben zählen. Als Wertebereich ist uint32 zubenutzen.
 		\item[u] eine eindeutige Benutzer-ID, die bei jeder Anfrage mit zusenden ist
-		\item[token] einem zufälligen String der bei jeder Anfrage zusammen mit \texttt{n}, der Paketnummer, in einem SHA512 Hash zu senden ist
+		\item[token] ein zufälliger String, der bei jeder Anfrage zusammen mit \texttt{n}, der Paketnummer, in einem SHA512 Hash zu senden ist
 	\end{itemize}
 \end{enumerate}
 
-\subsection{OAI-PMH}\label{sec:oai-pmh}
+Aus Kompatibilitätsgründen läuft die Paketnummer im wertebereich uit32, also bis maximal 2147483646, und fängt nach erreichen der Maximalzahl wieder bei 0 an. Dies führt jedoch bei momentanen Nutzerzahlen zu keinen Problemen und wird mit sehr hoher Wahrscheinlich auch in Zukunft kein Thema werden.
+
+\subsection{OAI-PMH}\label{sec:oai-pmh} %FIXME: Wofür?
 Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum Sammeln von Metadaten. Es wird dabei unterschieden zwischen Data Providern und Service Providern. Ein Data Provider betreibt ein oder mehrere Repositories, die OAI-PMH unterstützen um Metadaten bereitzustellen. Service Provider sammeln die Metadaten der Data Providern und bieten Mehrwertdienste an.
 
 Wir haben das OAI-PMH Protokoll implementiert um Metadaten zu den gesammelten Assoziationen bereitzustellen. Wir stellen dabei Metadaten zu den Wörtern und im geringen Maße zu den Benutzern bereit.
