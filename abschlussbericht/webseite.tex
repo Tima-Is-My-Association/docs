@@ -79,13 +79,13 @@ In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozes
 	\item Als nächstes sendet die Applikation die eigentliche Authentisierungsanfrage. Mit \code{username} und \code{password} des Nutzers, \code{client\_id} der Applikation, dem Zeitstempel der Antwort der letzten Anfrage und einem \code{token} das aus dem \code{secret} der Applikation und dem Zeitstempel geniert wird (SHA512).
 	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werten:
 	\begin{itemize}
-		\item[n] Paketnummer - jede Anfrage einer Applikation muss diese um eins nach oben zählen. Als Wertebereich ist \code{uint32} zu benutzen.
-		\item[u] eine eindeutige Nutzer-ID, die bei jeder Anfrage mit zusenden ist
-		\item[token] ein zufälliger String, der bei jeder Anfrage zusammen mit der Paketnummer \code{n} in einem SHA512 Hash zu senden ist
+    \item[\textbf{n}] Paketnummer - jede Anfrage einer Applikation muss diese um eins nach oben zählen. Als Wertebereich ist \code{uint32} zu benutzen.
+    \item[\textbf{u}] eine eindeutige Nutzer-ID, die bei jeder Anfrage mit zusenden ist
+    \item[\textbf{token}] ein zufälliger String, der bei jeder Anfrage zusammen mit der Paketnummer \code{n} in einem SHA512 Hash zu senden ist
 	\end{itemize}
 \end{enumerate}
 
-Aus Kompatibilitätsgründen läuft die Paketnummer im Wertebereich \code{uint32}, also bis maximal 2147483646, und fängt nach erreichen der Maximalzahl wieder bei 0 an. Dies führt jedoch bei momentanen Nutzerzahlen zu keinen Problemen und wird mit sehr hoher Wahrscheinlich auch in Zukunft kein Thema werden.
+Aus Kompatibilitätsgründen läuft die Paketnummer im Wertebereich \code{uint32}, also bis maximal 2147483646, und fängt nach erreichen der Maximalzahl wieder bei 0 an.
 
 \subsection{OAI-PMH}\label{sec:oai-pmh} %TODO: Wofür?
 Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum Sammeln von Metadaten. Es wird dabei unterschieden zwischen Data Providern und Service Providern. Ein Data Provider betreibt ein oder mehrere Repositories, die OAI-PMH unterstützen um Metadaten bereitzustellen. Service Provider sammeln die Metadaten der Data Providern und bieten Mehrwertdienste an.

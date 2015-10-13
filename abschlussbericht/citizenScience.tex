@@ -34,15 +34,15 @@ caption=Wortauswahlalgorithmus]
 w = [alle Worter einer Sprache]
 w = w - [alle auszuschließenden Wörter]
 if ( Annonymer Nutzer )
-w = [15 Wörter mit niedrigstem Häufigkeit aus w]
+  w = [15 Wörter mit niedrigstem Häufigkeit aus w]
 else
-w = w - [alle auszuschließenden Wörter des Nutzers]
+  w = w - [alle auszuschließenden Wörter des Nutzers]
 w = [15 Wörter mit niedrigstem Auftreten in der AssociationHistory des Buntzers1 aus w]
 return [zufälliges Wort aus w]
 \end{lstlisting}
 
 \subsection{ExcludeWords}\label{subsec:excludewords}
-Falls ein Nutzer zu einem Wort keine Assoziation einfällt, hat er die
+Falls einem Nutzer zu einem Wort keine Assoziation einfällt, hat er die
 Möglichkeit das Wort zu überspringen. Damit der Nutzer nicht in kurzer Zeit
 wiederholt danach gefragt wird (vgl.
 \hyperref[subsec:Wortauswahlalgorithmus]
@@ -94,7 +94,7 @@ Um die Datenqualität  in der Datenbank zu sichern, setzen wir auf drei Dinge:
 
 \subsubsection{Rechtschreibung}
 Die nächstliegendste Überprüfung, um die Datenqualität zu gewährleisten, ist eine
-Rechtschreibkontrolle. Wo bei nur auf Korrektheit eines Wortes geachtet wird und dem Nutzer keine Vorschläge zur Rechtschreibung gemacht werden.
+Rechtschreibkontrolle. Wobei nur auf Korrektheit eines Wortes geachtet wird und dem Nutzer keine Vorschläge zur Rechtschreibung gemacht werden.
 
 Ein eingegebenes Wort wird zuerst mit der Datenbank abgeglichen, um zu schauen ob das Wort bereits bekannt ist. Wenn dies der Fall ist wird es als richtig angesehen ansonsten wird das Wort mit Wiktionary\footnote{https://www.wiktionary.org/} abgeglichen.
 
