@@ -28,6 +28,7 @@
 \usepackage{color}
 \usepackage[table]{xcolor}
 \definecolor{lightgray}{rgb}{.95,.95,.95}
+\definecolor{lightgray2}{rgb}{.90,.90,.90}
 
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
 \newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
@@ -35,6 +36,7 @@
 \newcommand{\st}[0]{\superscript{st}}
 \newcommand{\nd}[0]{\superscript{nd}}
 \newcommand{\rd}[0]{\superscript{rd}}
+\newcommand{\code}[1]{\colorbox{lightgray2}{\lstinline[basicstyle=\ttfamily]|#1|}}
 
 \begin{document}
 \input{title}
