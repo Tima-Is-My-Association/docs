@@ -1,5 +1,5 @@
 \chapter{Assoziationsdatenbank und API}
-Das Ziel von TIMA ist das Erstellen einer Datenbank, in denen Assoziation gespeichert werden. Daher liegt ein Schwerpunkt unserer Arbeit darin, diese zu Erstellen und zu Befüllen. Die Datenbank ist direkt verknüpft mit einem Webfrontend, das durch die Bereitstellung einer umfassenden API der Hauptanlaufpunkt für die Nutzer und die Apps ist.
+Das Ziel von TIMA ist das Erstellen einer Datenbank, in denen Assoziation gespeichert werden. Daher liegt ein Schwerpunkt unserer Arbeit darin, diese zu Erstellen und zu Befüllen. Die Datenbank ist direkt verknüpft mit einem Webfrontend, das durch die Bereitstellung einer umfassenden API der Hauptanlaufpunkt für die Nutzer und die Applikationen ist.
 
 In diesem Kapitel werden das Backend der Webseite und die Datenbank näher beschrieben. Dabei wird genauer auf Designentscheidungen eingegangen, die zum Aufbau der einzelnen Datenbankbestandteile geführt haben.
 
@@ -25,13 +25,13 @@ Um eine Unterscheidung zwischen verschiedenen Sprachen zu ermöglichen, repräse
 \paragraph{} Um grundlegende Funktionen des Nutzermanagements zu ermöglichen, wurden das Modul \code{app.models} eingeführt. Das Modell \code{Profile} speichert grundlegende Informationen zu jedem Nutzer, zum Beispiel die Punktzahl und die Sprachen, für die ein Nutzer assoziiert hat. Diese Daten werden in einem Ranglistensystem genutzt, das die Nutzer motivieren soll, sich gegenseitig zu messen. In dem Modell \code{AssociationHistory} wird die gesamte Assoziationsgeschichte eines Nutzers gespeichert, mit den jeweils für eine Assoziation erhaltenen Punkte. Somit können im Falle eines Missbrauchs die gegebenen Assoziationen aus der Datenbank gelöscht werden und dem Nutzer die Punkte entzogen werden.
 Das Modell \code{ExcludeWord} enthält für jeden Nutzer die Wörter, die er innerhalb der letzten sieben Tage übersprungen hat (vgl. \hyperref[subsec:excludewords]{Abschnitt \ref*{subsec:excludewords}}). Das letzte Modell in diesem Modul speichert für jeden Nutzer welche Worte er in seinem Newsletter empfangen möchte.
 
-\paragraph{} Für die Kommunikation zwischen App und Backend, insbesondere der Authentifizierung der Schreibzugriffe auf die Datenbank (vgl. \hyperref[sec:api]{Abschnitt \ref*{sec:api}}) dient das Modul \code{applications.models}. Das Modell \code{Application} speichert die Apps, mit denen es möglich ist sich zu authentifiziert, mit den nötigen Daten für die Authentifizierung (vgl. \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}}). Die beiden anderen Modelle dieses Moduls \code{AuthRequest} und \code{AuthedUser} speichern die nötigen Information für einen Nutzer der sich authentifizieren möchte oder sich bereits authentifiziert hat. Durch dieses Modul wird also gewährleistet, dass nur Nutzer auf die Datenbank zugreifen können, die eine von uns erlaubte Anwendung nutzen.
+\paragraph{} Für die Kommunikation zwischen der Applikation und dem Backend, insbesondere der Authentifizierung der Schreibzugriffe auf die Datenbank (vgl. \hyperref[sec:api]{Abschnitt \ref*{sec:api}}) dient das Modul \code{applications.models}. Das Modell \code{Applikation} speichert die Applikationen, mit denen es möglich ist sich zu authentifiziert, mit den nötigen Daten für die Authentifizierung (vgl. \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}}). Die beiden anderen Modelle dieses Moduls \code{AuthRequest} und \code{AuthedUser} speichern die nötigen Information für einen Nutzer der sich authentifizieren möchte oder sich bereits authentifiziert hat. Durch dieses Modul wird also gewährleistet, dass nur Nutzer auf die Datenbank zugreifen können, die eine von uns erlaubte Anwendung nutzen.
 
 \paragraph{} Das letzte Modul und die beinhalteten Modell sind für OAI-PMH erforderlich, näheres dazu in \hyperref[sec:oai-pmh]{Abschnitt \ref*{sec:oai-pmh}}.
 
 
 \section{API}\label{sec:api}
-Damit verschiedene Apps mit der TIMA Datenbank kommunizieren können, haben
+Damit verschiedene Applikationen mit der TIMA Datenbank kommunizieren können, haben
 wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich
 grob in drei Teile gliedern. Zum einen gibt es die Anfragen, die keiner
 Authentifizierung bedürfen, zweitens jene die eine Authentifizierung erfordern und
@@ -55,13 +55,13 @@ Die API-Anfragen, die keine Authentifizierung bedürfen sind allgemeine Anfragen
 \paragraph{Wörter} Um entweder ein einzelnes Wort oder eine Liste von Wörtern abzufragen, ist diese Anfrage bestimmt. Es können optional Wort-IDs, Sprache oder ein Limit für die Anzahl der Assoziationen pro Wort angegeben werden. Das JSON-Objekt der Antwort enthält unter anderem zu jedem Wort einen Link zur Website des Wortes, ein Link zu dieser Anfrage mit der Auswahl auf das einzelne Wort und der OAI-PMH-Identifier des Wortes.
 
 \subsection{Authentifizierte Anfragen}\label{subsec:authentifizierte_anfragen}
-Da nicht jeder Schreibzugriff auf die Datenbank erhalten soll ist eine Authentifizierung notwendig. Außerdem ist eine Authentisierung notwendig, um Nutzer der App oder der Webseite eindeutig identifizieren zu können. Aus diesem Grund war es erforderlich, dass einige API Anfragen eine Authentifizierung benötigen.
+Da nicht jeder Schreibzugriff auf die Datenbank erhalten soll ist eine Authentifizierung notwendig. Außerdem ist eine Authentisierung notwendig, um Nutzer der Applikation oder der Webseite eindeutig identifizieren zu können. Aus diesem Grund war es erforderlich, dass einige API Anfragen eine Authentifizierung benötigen.
 
 Um dies zu realisieren haben wir uns zunächst bestehende Bibliotheken wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
 
 Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 \begin{enumerate}
-	\item Sichere Authentisierung einer App
+	\item Sichere Authentisierung einer Applikation
 	\item Sichere Authentisierung eines Nutzers
 	\item Sicherstellen, das spätere Anfragen von einem authentifizierten Nutzer kommen
 \end{enumerate}
@@ -73,13 +73,13 @@ Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 	\label{fig:auth}
 \end{figure}
 
-In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch dargestellt. Der Client ist dabei eine App, über die sich ein Nutzer authentisieren möchte. Die App verfügt zum einen über eine \code{client\_id} und über ein \code{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab:
+In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozess schematisch dargestellt. Der Client ist dabei eine Applikation, über die sich ein Nutzer authentisieren möchte. Die Applikation verfügt zum einen über eine \code{client\_id} und über ein \code{secret}, beides von TIMA vergebene eindeutige zufällige Strings. Der Authentisierungsprozess läuft wie folgt ab:
 \begin{enumerate}
-	\item Eine App sendet eine Anfrage an TIMA mit dem \code{username} des Nutzers und der \code{client\_id}. TIMA prüft diese beiden Werte auf Existenz und antwortet entweder mit \textbf{200} (HTTP Response Code) und dem aktuellen Zeitstempel oder mit \textbf{404}.
-	\item Als nächstes sendet die App die eigentliche Authentisierungsanfrage. Mit \code{username} und \code{password} des Nutzers, \code{client\_id} der App, dem Zeitstempel der Antwort der letzten Anfrage und einem \code{token} das aus dem \code{secret} der App und dem Zeitstempel geniert wird (SHA512).
+	\item Eine Applikation sendet eine Anfrage an TIMA mit dem \code{username} des Nutzers und der \code{client\_id}. TIMA prüft diese beiden Werte auf Existenz und antwortet entweder mit \textbf{200} (HTTP Response Code) und dem aktuellen Zeitstempel oder mit \textbf{404}.
+	\item Als nächstes sendet die Applikation die eigentliche Authentisierungsanfrage. Mit \code{username} und \code{password} des Nutzers, \code{client\_id} der Applikation, dem Zeitstempel der Antwort der letzten Anfrage und einem \code{token} das aus dem \code{secret} der Applikation und dem Zeitstempel geniert wird (SHA512).
 	\item TIMA antwortet wenn die Authentisierung erfolgreich war mit \textbf{200} und den folgenden drei Werten:
 	\begin{itemize}
-		\item[n] Paketnummer - jede Anfrage einer App muss diese um eins nach oben zählen. Als Wertebereich ist \code{uint32} zu benutzen.
+		\item[n] Paketnummer - jede Anfrage einer Applikation muss diese um eins nach oben zählen. Als Wertebereich ist \code{uint32} zu benutzen.
 		\item[u] eine eindeutige Nutzer-ID, die bei jeder Anfrage mit zusenden ist
 		\item[token] ein zufälliger String, der bei jeder Anfrage zusammen mit der Paketnummer \code{n} in einem SHA512 Hash zu senden ist
 	\end{itemize}

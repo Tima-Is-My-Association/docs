@@ -1,5 +1,5 @@
-\chapter{Apps und Webseite}
-Die Apps und die Webseite sollen die Verwendung vom TIMA für möglichst
+\chapter{Applikationen und Webseite}
+Die Applikationen und die Webseite sollen die Verwendung vom TIMA für möglichst
 viele Endnutzer möglich machen.
 
 \section{Webseite}
@@ -8,15 +8,15 @@ deren Assoziationen ansehen und weitere Funktionen wie die Rangliste und andere 
 
 Das Webfrontend basiert auf Django, wurde zusätzlich zu HTML mit Bootstrap und JQuery erstellt. Zur Visualisierung von Assoziationsgraphen wurde D3.js verwendet.
 
-\section{Apps}
-De Apps sollen die Verwendung von TIMA ohne Webbrowser ermöglichen. Durch Apps wird besonders für mobile Geräte die Nutzung vereinfacht.
-In einer erste Variante der App wurden grundlegende Funktionen der
+\section{Applikationen}
+Die Applikationen sollen die Verwendung von TIMA ohne Webbrowser ermöglichen. Durch Applikations wird besonders für mobile Geräte die Nutzung vereinfacht.
+In einer erste Variante der Applikation wurden grundlegende Funktionen der
 Webseite nachgebaut. Dies diente unter anderem der Entwicklung der API, um etwaige
 Fehler im Protokoll oder Verbesserungen dessen aufzuzeigen und zu beheben.
 
 \subsection{Bibliothek}
 Als Bibliothek wurde sich für Qt5 entschieden Aufgrund der weitreichenden
-Unterstützung der Bibliothek auf verschiedenen Endgeräten. Hier ist besonders darauf hinzuweisen, das Qt5 sowohl auf Andriod als auch auf iOS läuft und so nicht die gleiche App für beide Betriebssysteme geschrieben werden muss.
+Unterstützung der Bibliothek auf verschiedenen Endgeräten. Hier ist besonders darauf hinzuweisen, das Qt5 sowohl auf Andriod als auch auf iOS läuft und so nicht die gleiche Applikation für beide Betriebssysteme geschrieben werden muss.
 
 \subsection{Aufbau}
 Die innere Logik wird durch einen Zustandsautomaten dargestellt um
@@ -27,12 +27,12 @@ Signale geregelt, die mit Qt implementiert sind.
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=\textwidth]{../UML/app_automata.png}
-	\caption{UML State Diagramm des Appzustandsautomaten}
+	\caption{UML State Diagramm des Applikationszustandsautomaten}
 	\label{fig:uml_automata}
 \end{figure}
 
 \section{Sicherheit}
-Die Sicherheit hat bei der Entwicklung eine große Rolle gespielt. Jede App nutzt die in \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}} vorgestellte Autorisierungsmethode um  mit der API zu kommunizieren.  Dies dient dazu, dass lediglich von TIMA
-akzeptierte Apps, Schreibrechte auf der Datenbank haben. Das Auslesen
+Die Sicherheit hat bei der Entwicklung eine große Rolle gespielt. Jede Applikation nutzt die in \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}} vorgestellte Autorisierungsmethode um  mit der API zu kommunizieren.  Dies dient dazu, dass lediglich von TIMA
+akzeptierte Applikationen, Schreibrechte auf der Datenbank haben. Das Auslesen
 der Informationen bleibt davon jedoch unangetastet, sofern es sich nicht um benutzerspezifische Daten handelt, und ist nach wie vor für
 jeden offen.
