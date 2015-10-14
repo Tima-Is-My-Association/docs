@@ -2,16 +2,16 @@
 
 In einem Citizen Science Projekt sind zusätzliche Schwerpunkte zu beachten als in einem gewöhnlichen Informatikprojekt. Die Nutzer sind keine bezahlten oder interessierten Angestellten, sondern gehören der breite Masse an. Nur mit einer großen Anzahl Nutzer lassen sich eine große Menge Daten sammeln, die eine Assoziationsdatenbank sinnvoll macht. So nutzen wir die Intelligenz der Masse, die wichtigsten Assoziationen zu einem bestimmten Wort zu finden. Es ergeben sich zwei Themen, die in den meisten anderen Projekten nicht so gewichtig sind.
 
-In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen dazu motiviert, etwas zum Projekt beizutragen. Dabei fokussieren wir uns auf \textbf{Spiele}, um einen Anreiz zum Mitwirken zu geben.
+In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen die nötige \textbf{Motivation} liefert, etwas zum Projekt beizutragen. Dabei fokusieren wir uns auf Spiele, um einen Anreiz zum Mitwirken zu geben.
 
 \section{Grundlegende Dateneingabe}
-Die Dateneingabe erfolgt bei TIMA im einfachsten Fall entweder über die Webseite oder die bereits entstanden Applikationen. Dabei werden nacheinander, dem Nutzer, Wörter gegeben, zu denen er eine Assoziation eingeben soll. Der dabei gewählte Algorithmus zur Wortauswahl wird im nächsten Abschnitt beschrieben.
+Die Dateneingabe erfolgt bei TIMA im einfachsten Fall entweder über die Webseite oder die bereits entstanden Applikationen. Dabei werden nacheinander, dem Nutzer Wörter gegeben, zu denen er eine Assoziation eingeben soll. Der dabei gewählte Algorithmus zur Wortauswahl wird im nächsten Abschnitt beschrieben.
 
 \subsection{Wortauswahlalgorithmus}\label{subsec:Wortauswahlalgorithmus}
-In diesem Abschnitt wird die Funktionsweise des Wortauswahlalgorithmus genauer beschrieben. In der Datenbank ist es wünschenswert, dass jedes Wort mindestens eine Assoziation hat und zusätzlich ein ungefähres Gleichgewicht an Assoziationen verteilt zwischen allen Worten herrscht. Der Wortauswahlalgorithmus ist zuständig für das Auswählen der Worte, für die eine Assoziation gegeben werden soll, damit diese Eigenschaften erreicht werden. Folgende Kriterien müssen erfüllt werden:
+In diesem Abschnitt wird die Funktionsweise des Wortauswahlalgorithmus' genauer beschrieben. In der Datenbank ist es wünschenswert, dass jedes Wort mindestens eine Assoziation hat und zusätzlich ein ungefähres Gleichgewicht an Assoziationen verteilt zwischen allen Worten herrscht. Der Wortauswahlalgorithmus ist zuständig für das Auswählen der Worte, für die eine Assoziation gegeben werden soll, damit diese Eigenschaften erreicht werden. Folgende Kriterien müssen erfüllt werden:
 
 \begin{itemize}
-	\item Jeder Nutzer soll möglichst zu jedem Wort mindestens eine Assoziation geben.
+	\item Jeder Nutzer soll zu möglichst vielen verschiedenen Worten eine Assoziation geben.
 	\item Wörter, die wenig assoziiert wurden, entweder insgesamt oder von einem einzelnen Nutzer, sollten für diesen Nutzer bevorzugt werden.
 	\item Wörter sollen ausgeschlossen werden können, um z.B. zu verhindern, dass das selbe Wort mehrmals hintereinander kommt.
 \end{itemize}
@@ -70,7 +70,10 @@ Gegenübers. Dadurch bildet sich eine Kette mehrerer Assoziationen bis
 zu bestimmten Abbruchbedingungen. Ein mögliches Ende stellt das Assoziieren
 eines bereits verwendeten Wortes dar und die damit verbundene Schließung eines
 Kreises in der Kette. Das Spiel ist ebenfalls beendet, sollte einem Spieler
-keine weitere Assoziation zeitnah einfallen. In der momentanen Umsetzung wird gegen den Computer, bzw. die Datenbank, gespielt.
+keine weitere Assoziation zeitnah einfallen. Das Spiel Assoziationskette steht als Variante mit einem Computergegner
+momentan sowohl auf der Webseite, als auch als App zur Verfügung. Der Computer
+wählt dabei seine Assoziation zufällig aus den 10 am meisten gewählten
+Assoziationen aus der Datenbank zu dem gegebenen Wort. So ist die Schließung eines Kreises durch den Computer möglich, aber unwahrscheinlich.
 
 Alle gegebenen Assoziationen des Spielers werden hierbei mit Punkten belohnt
 und für die Datenbank verwendet, die Punkte berechnen sich dabei wie im \hyperref[subsec:punkte]{Abschnitt \ref*{subsec:punkte}} beschrieben. Die Gesamtlänge der Kette wird zusätzlich Bewertet und dem Sieger gutgeschrieben.
@@ -93,24 +96,24 @@ Um die Datenqualität  in der Datenbank zu sichern, setzen wir auf drei Dinge:
 \end{enumerate}
 
 \subsubsection{Rechtschreibung}
-Die nächstliegendste Überprüfung, um die Datenqualität zu gewährleisten, ist eine
-Rechtschreibkontrolle. Wobei nur auf Korrektheit eines Wortes geachtet wird und dem Nutzer keine Vorschläge zur Rechtschreibung gemacht werden.
+Die naheliegendste Überprüfung um die Datenqualität zu gewährleisten, ist eine
+Rechtschreibkontrolle. Dabei wird nur auf Korrektheit eines Wortes geachtet und dem Nutzer werden keine Vorschläge zur Rechtschreibung unterbreitet.
 
 Ein eingegebenes Wort wird zuerst mit der Datenbank abgeglichen, um zu schauen ob das Wort bereits bekannt ist. Wenn dies der Fall ist wird es als richtig angesehen ansonsten wird das Wort mit Wiktionary\footnote{https://www.wiktionary.org/} abgeglichen.
 
-Sollte das Wort nicht gefunden werden wird der Nutzer darauf hingewiesen, damit er ggf. Änderungen vornehmen kann.
+Sollte das Wort nicht gefunden werden wird der Nutzer darauf hingewiesen, damit er ggf. Änderungen vornehmen kann. Sollte ein Nutzer seine Eingabe daraufhin bestätigen, erhält er für dafür Punkte, die jedoch im Vergleich zu einem Wort, das wir kennen deutlich kleiner sein werden. Das eingebene Wort wird jedoch nicht unserer Datenbank hinzugefügt. Wir setzen an dieser Stelle die Vollständigkeit unserer Datenquelle vorraus, beziehungsweise halten ein nicht bekanntes Wort für irrelevant.
 
 \subsubsection{Mengenrelevanz}
 Mit einer Rechtschreibprüfung lässt sich natürlich nicht verhindern, dass ein
-Nutzer falsche oder unrelevante Daten eingibt. Ob eine Assoziation falsch ist,
+Nutzer falsche oder irrelevante Daten eingibt. Ob eine Assoziation falsch ist,
 kann man natürlich von außerhalb nicht entscheiden. Jeder Mensch hat eigene
 Assoziationen zu bestimmten Worten.
 
-Wir betrachten eine Assoziation als richtig, wenn sie im Allgemeinen
-nachvollziehbar ist. Gibt ein Nutzer jetzt eine Assoziation ein, die diesem
+Wir betrachten eine Assoziation als relevant, wenn sie im Allgemeinen
+nachvollziehbar ist. Gibt ein Nutzer eine Assoziation ein, die diesem
 Anspruch nicht genügt, ob mutwillig oder nicht, kann man davon ausgehen, dass
 andere Menschen diese Assoziation nicht geben. In der Datenbank wird eine
-falsche Assoziation also statistisch irrelevant.
+irrelevante Assoziation also statistisch vernachlässigbar.
 
 \subsubsection{Nutzermanagement}
 Ein weiteres mächtiges Werkzeug zur Vermeidung von Vandalismus ist die

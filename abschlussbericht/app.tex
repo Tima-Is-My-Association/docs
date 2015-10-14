@@ -9,10 +9,10 @@ deren Assoziationen ansehen und weitere Funktionen wie die Rangliste und andere 
 Das Webfrontend basiert auf Django, wurde zusätzlich zu HTML mit Bootstrap und JQuery erstellt. Zur Visualisierung von Assoziationsgraphen wurde D3.js verwendet.
 
 \section{Applikationen}
-Die Applikationen sollen die Verwendung von TIMA ohne Webbrowser ermöglichen. Durch Applikations wird besonders für mobile Geräte die Nutzung vereinfacht.
+Die Applikationen sollen die Verwendung von TIMA ohne Webbrowser ermöglichen. Durch Applikationen wird besonders für mobile Geräte die Nutzung vereinfacht.
 In einer erste Variante der Applikation wurden grundlegende Funktionen der
 Webseite nachgebaut. Dies diente unter anderem der Entwicklung der API, um etwaige
-Fehler im Protokoll oder Verbesserungen dessen aufzuzeigen und zu beheben.
+Fehler im Übertraungsprotokoll aufzuzeigen und zu beheben beziehungsweise Verbesserungsmöglichkeiten zu erhalten.
 
 \subsection{Bibliothek}
 Als Bibliothek wurde sich für Qt5 entschieden Aufgrund der weitreichenden
@@ -25,7 +25,7 @@ dagegen entschieden.
 Die innere Logik wird durch einen Zustandsautomaten dargestellt um
 Mehrfachanfragen zu vermeiden und eine einfache Fehlerkorrektur zu ermöglichen.
 In \hyperref[fig:uml_automata]{Abbildung \ref*{fig:uml_automata}} wird der Zusammenhang der einzelnen
-Zustände angezeigt. Das wechseln der Zustände wird ausschließlich über die
+Zustände angezeigt. Das Wechseln der Zustände wird ausschließlich über die
 Signale geregelt, die mit Qt implementiert sind.
 \begin{figure}[!h]
 	\centering
@@ -35,7 +35,7 @@ Signale geregelt, die mit Qt implementiert sind.
 \end{figure}
 
 \section{Sicherheit}
-Die Sicherheit hat bei der Entwicklung eine große Rolle gespielt. Jede Applikation nutzt die in \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}} vorgestellte Autorisierungsmethode um  mit der API zu kommunizieren.  Dies dient dazu, dass lediglich von TIMA
-akzeptierte Applikationen, Schreibrechte auf der Datenbank haben. Das Auslesen
+Die Sicherheit hat bei der Entwicklung eine große Rolle gespielt. Jede Applikation nutzt die in \hyperref[subsec:authentifizierte_anfragen]{Abschnitt \ref*{subsec:authentifizierte_anfragen}} vorgestellte Autorisierungsmethode um mit der API zu kommunizieren.  Dies dient dazu, dass lediglich von TIMA
+akzeptierte Applikationen Schreibrechte auf der Datenbank haben. Das Auslesen
 der Informationen bleibt davon jedoch unangetastet, sofern es sich nicht um benutzerspezifische Daten handelt, und ist nach wie vor für
 jeden offen.

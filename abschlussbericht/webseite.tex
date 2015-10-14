@@ -33,7 +33,7 @@ Das Modell \code{ExcludeWord} enthält für jeden Nutzer die Wörter, die er inn
 \section{API}\label{sec:api}
 Damit verschiedene Applikationen mit der TIMA Datenbank kommunizieren können, haben
 wir uns entschieden eine umfangreiche API zu implementieren. Diese lässt sich
-grob in drei Teile gliedern. Zum einen gibt es die Anfragen, die keiner
+grob in drei Teile gliedern. Erstens gibt es die Anfragen, die keiner
 Authentifizierung bedürfen, zweitens jene die eine Authentifizierung erfordern und
 drittens eine OAI-PMH Schnittstelle.
 
@@ -52,12 +52,12 @@ Die API-Anfragen, die keine Authentifizierung bedürfen sind allgemeine Anfragen
 
 \paragraph{Sprachen} Es kann eine Liste aller Sprachen in TIMA angefordert werden, hier ist neben dem Namen, der Sprach-Code in der Antwort enthalten, der bei vielen anderen Anfragen als Parameter angegeben werden muss.
 
-\paragraph{Wörter} Um entweder ein einzelnes Wort oder eine Liste von Wörtern abzufragen, ist diese Anfrage bestimmt. Es können optional Wort-IDs, Sprache oder ein Limit für die Anzahl der Assoziationen pro Wort angegeben werden. Das JSON-Objekt der Antwort enthält unter anderem zu jedem Wort einen Link zur Website des Wortes, ein Link zu dieser Anfrage mit der Auswahl auf das einzelne Wort und der OAI-PMH-Identifier des Wortes.
+\paragraph{Wörter} Um entweder ein einzelnes Wort oder eine Liste von Wörtern abzufragen, ist diese Anfrage bestimmt. Es können optional Wort-IDs, Sprache oder ein Limit für die Anzahl der Assoziationen pro Wort angegeben werden. Das JSON-Objekt der Antwort enthält unter anderem zu jedem Wort einen Link zur Website des Wortes, einen Link zu dieser Anfrage mit der Auswahl auf das einzelne Wort und den OAI-PMH-Identifier des Wortes.
 
 \subsection{Authentifizierte Anfragen}\label{subsec:authentifizierte_anfragen}
-Da nicht jeder Schreibzugriff auf die Datenbank erhalten soll ist eine Authentifizierung notwendig. Außerdem ist eine Authentisierung notwendig, um Nutzer der Applikation oder der Webseite eindeutig identifizieren zu können. Aus diesem Grund war es erforderlich, dass einige API Anfragen eine Authentifizierung benötigen.
+Da nicht jeder Nutzer Schreibzugriff auf die Datenbank erhalten soll, ist eine Authentifizierung notwendig. Außerdem ist eine Authentisierung notwendig, um Nutzer der Applikation oder der Webseite eindeutig identifizieren zu können. Aus diesem Grund war es erforderlich, dass einige API Anfragen eine Authentifizierung benötigen.
 
-Um dies zu realisieren haben wir uns zunächst bestehende Bibliotheken wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
+Um dies zu realisieren haben wir uns zunächst bestehende Bibliotheken wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt.  Da unsere Anwendungen auch auf mobilen Endgeräte gerichtet sind, ist eine große Datenmenge, wie sie die meisten Autorisierungsmethoden nutzen, nicht sehr praktikabel. Andere bieten keine ausreichenden Protokolle für beidseitigen Datenaustausch. Schlußendlich haben wir uns entschieden, eine eigene Methode zu entwickeln.
 
 Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 \begin{enumerate}
@@ -88,6 +88,6 @@ In \hyperref[fig:auth]{Abbildung \ref*{fig:auth}} ist der Authentisierungsprozes
 Aus Kompatibilitätsgründen läuft die Paketnummer im Wertebereich \code{uint32}, also bis maximal 2147483646, und fängt nach erreichen der Maximalzahl wieder bei 0 an.
 
 \subsection{OAI-PMH}\label{sec:oai-pmh} %TODO: Wofür?
-Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum Sammeln von Metadaten. Es wird dabei unterschieden zwischen Data Providern und Service Providern. Ein Data Provider betreibt ein oder mehrere Repositories, die OAI-PMH unterstützen um Metadaten bereitzustellen. Service Provider sammeln die Metadaten der Data Providern und bieten Mehrwertdienste an.
+Bei OAI-PMH (Open Archives Initiative - Protocol for Metadata Harvesting) handelt es sich um ein auf XML basierendes Protokoll zum Sammeln von Metadaten. Es wird dabei unterschieden zwischen Data Providern und Service Providern. Ein Data Provider betreibt ein oder mehrere Repositories, die OAI-PMH unterstützen um Metadaten bereitzustellen. Service Provider sammeln die Metadaten der Data Providern und bieten Mehrwertdienste an. Da TIMA ein offenes Projekt ist, liegt es nahe, derartige Projekte ebenfalls zu unterstützen.
 
-Wir haben das OAI-PMH Protokoll implementiert um Metadaten zu den gesammelten Assoziationen bereitzustellen. Wir stellen dabei Metadaten zu den Wörtern und im geringen Maße zu den Nutzern bereit.
+Wir haben das OAI-PMH Protokoll implementiert um Metadaten zu den gesammelten Assoziationen bereitzustellen. Wir stellen dabei als Data Provider Metadaten zu den Wörtern und im geringen Maße zu den Nutzern bereit.
