@@ -57,7 +57,7 @@ Die API-Anfragen, die keine Authentifizierung bedürfen sind allgemeine Anfragen
 \subsection{Authentifizierte Anfragen}\label{subsec:authentifizierte_anfragen}
 Da nicht jeder Nutzer Schreibzugriff auf die Datenbank erhalten soll, ist eine Authentifizierung notwendig. Außerdem ist eine Authentisierung notwendig, um Nutzer der Applikation oder der Webseite eindeutig identifizieren zu können. Aus diesem Grund war es erforderlich, dass einige API Anfragen eine Authentifizierung benötigen.
 
-Um dies zu realisieren haben wir uns zunächst bestehende Bibliotheken wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt.  Da unsere Anwendungen auch auf mobilen Endgeräte gerichtet sind, ist eine große Datenmenge, wie sie die meisten Autorisierungsmethoden nutzen, nicht sehr praktikabel. Andere bieten keine ausreichenden Protokolle für beidseitigen Datenaustausch. Schlußendlich haben wir uns entschieden, eine eigene Methode zu entwickeln.
+Um dies zu realisieren haben wir uns zunächst bestehende Bibliotheken wie zum Beispiel OAuth2 angeschaut und getestet in wie weit diese unseren Anforderungen genügen. Dies hat allerdings zu keinen zufriedenstellendem Ergebnis geführt, weswegen wir entschieden haben dies selbstständig zu implementieren.
 
 Die grundlegenden Anforderungen die wir dabei hatten sind wie folgt:
 \begin{enumerate}

@@ -2,16 +2,15 @@
 
 In einem Citizen Science Projekt sind zusätzliche Schwerpunkte zu beachten als in einem gewöhnlichen Informatikprojekt. Die Nutzer sind keine bezahlten oder interessierten Angestellten, sondern gehören der breite Masse an. Nur mit einer großen Anzahl Nutzer lassen sich eine große Menge Daten sammeln, die eine Assoziationsdatenbank sinnvoll macht. So nutzen wir die Intelligenz der Masse, die wichtigsten Assoziationen zu einem bestimmten Wort zu finden. Es ergeben sich zwei Themen, die in den meisten anderen Projekten nicht so gewichtig sind.
 
-In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen die nötige \textbf{Motivation} liefert, etwas zum Projekt beizutragen. Dabei fokusieren wir uns auf Spiele, um einen Anreiz zum Mitwirken zu geben.
+In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen die nötige \textbf{Motivation} liefert, etwas zum Projekt beizutragen. Dabei fokussieren wir uns auf Spiele, um einen Anreiz zum Mitwirken zu geben.
 
 \section{Grundlegende Dateneingabe}
 Die Dateneingabe erfolgt bei TIMA im einfachsten Fall entweder über die Webseite oder die bereits entstanden Applikationen. Dabei werden nacheinander, dem Nutzer Wörter gegeben, zu denen er eine Assoziation eingeben soll. Der dabei gewählte Algorithmus zur Wortauswahl wird im nächsten Abschnitt beschrieben.
 
 \subsection{Wortauswahlalgorithmus}\label{subsec:Wortauswahlalgorithmus}
-In diesem Abschnitt wird die Funktionsweise des Wortauswahlalgorithmus' genauer beschrieben. In der Datenbank ist es wünschenswert, dass jedes Wort mindestens eine Assoziation hat und zusätzlich ein ungefähres Gleichgewicht an Assoziationen verteilt zwischen allen Worten herrscht.
+In diesem Abschnitt wird die Funktionsweise des Wortauswahlalgorithmus genauer beschrieben. In der Datenbank ist es wünschenswert, dass jedes Wort mindestens eine Assoziation hat und zusätzlich ein ungefähres Gleichgewicht an Assoziationen verteilt zwischen allen Worten herrscht. Der Wortauswahlalgorithmus ist zuständig für das Auswählen der Worte, für die eine Assoziation gegeben werden soll, damit diese Eigenschaften erreicht werden.
 
-\newpage
-Der Wortauswahlalgorithmus ist zuständig für das Auswählen der Worte, für die eine Assoziation gegeben werden soll, damit diese Eigenschaften erreicht werden. Folgende Kriterien müssen erfüllt werden:
+Daraus ergeben sich die folgenden Anforderungen an den Algorithmus:
 
 \begin{itemize}
 	\item Jeder Nutzer soll zu möglichst vielen verschiedenen Worten eine Assoziation geben.
@@ -19,8 +18,9 @@ Der Wortauswahlalgorithmus ist zuständig für das Auswählen der Worte, für di
 	\item Wörter sollen ausgeschlossen werden können, um z.B. zu verhindern, dass das selbe Wort mehrmals hintereinander kommt.
 \end{itemize}
 
-Der Algorithmus, der diese Anforderungen erfüllt wird in Listing \ref{lst:wortselect} dargestellt.
+Der Algorithmus, der in TIMA umgesetzt ist und diese Anforderungen erfüllt, ist in \hyperref[lst:wortselect]{Listing \ref*{lst:wortselect}} aufgeführt. Zunächst werden alle Wörter der entsprechenden Sprache ausgewählt, davon werden anschließend alle Wörter, die nicht vorkommen sollen gefiltert. Danach wird in Abhängigkeit vom Status des Nutzers, die Liste der möglichen Wörter sortiert und auf 15 Wörter beschränkt, aus denen zufällig ein Wort gewählt wird.
 
+\medskip
 \begin{lstlisting}[basicstyle=\ttfamily,
 backgroundcolor=\color{lightgray},
 showspaces=false,
@@ -40,7 +40,7 @@ if ( Annonymer Nutzer )
   w = [15 Wörter mit niedrigstem Häufigkeit aus w]
 else
   w = w - [alle auszuschließenden Wörter des Nutzers]
-w = [15 Wörter mit niedrigstem Auftreten in der AssociationHistory des Buntzers1 aus w]
+  w = [15 Wörter mit niedrigstem Auftreten in der AssociationHistory des Buntzers1 aus w]
 return [zufälliges Wort aus w]
 \end{lstlisting}
 
@@ -73,10 +73,9 @@ Gegenübers. Dadurch bildet sich eine Kette mehrerer Assoziationen bis
 zu bestimmten Abbruchbedingungen. Ein mögliches Ende stellt das Assoziieren
 eines bereits verwendeten Wortes dar und die damit verbundene Schließung eines
 Kreises in der Kette. Das Spiel ist ebenfalls beendet, sollte einem Spieler
-keine weitere Assoziation zeitnah einfallen. Das Spiel Assoziationskette steht als Variante mit einem Computergegner
-momentan sowohl auf der Webseite, als auch als App zur Verfügung. Der Computer
-wählt dabei seine Assoziation zufällig aus den 10 am meisten gewählten
-Assoziationen aus der Datenbank zu dem gegebenen Wort. So ist die Schließung eines Kreises durch den Computer möglich, aber unwahrscheinlich.
+keine weitere Assoziation zeitnah einfallen.
+
+Das Spiel Assoziationskette steht derzeit nur als Variante mit einem Computergegner auf der Webseite zur Verfügung. Der Computer wählt dabei seine Assoziation zufällig aus den Assoziationen der Datenbank zu dem gegebenen Wort aus, wobei sichergestellt wird, das er keinen Kreis bildet.
 
 Alle gegebenen Assoziationen des Spielers werden hierbei mit Punkten belohnt
 und für die Datenbank verwendet, die Punkte berechnen sich dabei wie im \hyperref[subsec:punkte]{Abschnitt \ref*{subsec:punkte}} beschrieben. Die Gesamtlänge der Kette wird zusätzlich Bewertet und dem Sieger gutgeschrieben.
@@ -104,7 +103,7 @@ Rechtschreibkontrolle. Dabei wird nur auf Korrektheit eines Wortes geachtet und 
 
 Ein eingegebenes Wort wird zuerst mit der Datenbank abgeglichen, um zu schauen ob das Wort bereits bekannt ist. Wenn dies der Fall ist wird es als richtig angesehen ansonsten wird das Wort mit Wiktionary\footnote{https://www.wiktionary.org/} abgeglichen.
 
-Sollte das Wort nicht gefunden werden wird der Nutzer darauf hingewiesen, damit er ggf. Änderungen vornehmen kann. Sollte ein Nutzer seine Eingabe daraufhin bestätigen, erhält er für dafür Punkte, die jedoch im Vergleich zu einem Wort, das wir kennen deutlich kleiner sein werden. Das eingebene Wort wird jedoch nicht unserer Datenbank hinzugefügt. Wir setzen an dieser Stelle die Vollständigkeit unserer Datenquelle vorraus, beziehungsweise halten ein nicht bekanntes Wort für irrelevant.
+Sollte das Wort nicht gefunden werden wird der Nutzer darauf hingewiesen, damit er ggf. Änderungen vornehmen kann.
 
 \subsubsection{Mengenrelevanz}
 Mit einer Rechtschreibprüfung lässt sich natürlich nicht verhindern, dass ein
