@@ -1,8 +1,31 @@
 \chapter{TIMA als Citizen Science Projekt}
+Im folgenden Kapitel wird der Rahmen von Citizen Science definiert und die Einordnung von TIMA darin. Anschließend erfolgt eine Erläuterung der Grundlagen von TIMA beginnend mit der Dateneingabe. Im weiteren Verlauf des Kapitels, folgt die Sicherung der Datenqualität und die Lizenz.
 
-In einem Citizen Science Projekt sind zusätzliche Schwerpunkte zu beachten als in einem gewöhnlichen Informatikprojekt. Die Nutzer sind keine bezahlten oder interessierten Angestellten, sondern gehören der breite Masse an. Nur mit einer großen Anzahl Nutzer lassen sich eine große Menge Daten sammeln, die eine Assoziationsdatenbank sinnvoll macht. So nutzen wir die Intelligenz der Masse, die wichtigsten Assoziationen zu einem bestimmten Wort zu finden. Es ergeben sich zwei Themen, die in den meisten anderen Projekten nicht so gewichtig sind.
+\section{Citizen Science}
+Für Citizen Science gibt es keine klare Definition. Es gibt verschiedene Grenzen die um den Begriff Citizen Science gezogen werden. Unterschieden wird dabei z.B. zwischen Citizen Science und Crowdsourcing, jedoch sind die Übergänge meist fließend.
 
-In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen die nötige \textbf{Motivation} liefert, etwas zum Projekt beizutragen. Dabei fokussieren wir uns auf Spiele, um einen Anreiz zum Mitwirken zu geben.
+Als ein Maßstab der zur Abtrennung zwischen Citizen Science und Crowdsourcing benutzt wird M. Haklays Stufen der Beteiligung genutzt. Dabei werden vier Stufen unterschieden. Am unteren Ende der Skala steht dabei das Crowdsourcing auf Stufe eins, bei dem die Teilnehmer als Sensoren oder Freiwillige mitarbeiten. Am oberen Ende, auf Stufe vier, steht das „extreme“ Citizen Science, bei dem sowohl die Problemdefinition, als auch die Datensammlung und -auswertung von den Teilnehmern gemacht wird.
+\\~\\
+Eine weiter Abgrenzung erfolgt über eine Einordnung des Citizen Science Projektes selber in fünf verschiedene Typen:
+
+\paragraph{Aktion (Action)} bezeichnet meist das Involieren von Teilnehmern in Lokale Anliegen, die nicht von Wissenschaftlern organisiert sind, aber oft eine beratende Funktion dabei einnehmen. Es handelt sich in der Regel um langfristige Bewegungen mit gesellschaftlichen Zielen.
+
+\paragraph{Erhaltung (Conservation)} umfasst das Verwalten mit eindeutigen Lehrzielen. Diese sind meist jedoch nicht in einem leicht zugänglichen Format und stark abhängig von staatlichen Mitteln.
+
+\paragraph{Die Untersuchung (Investigation)} beschäftigt sich mit dem Sammeln von Daten die für ein spezifisches Forschungsziel von Nöten sind. Die Projekte müssen in wissenschaftlichen Rahmenbedingungen geführt werden.
+
+\paragraph{Virtuell (Virtual)} ist mit dem vorherigen Punkt „Untersuchung“ zu vergleichen. Der Unterschied besteht darin, das keine physikalische Datensammlung notwendig ist.
+
+\paragraph{Lehre (Education)} hat zum Hauptziel, die Verbreitung von Wissen. Gültige Resultate haben hierbei weniger Wert, als der Lernprozess an sich.
+ 
+Für uns muss ein Projekt, damit es als Citizen Science angesehen werden kann, zu mindestens einem der fünf Typen zugeordnet werden können. Des weiteren muss es in M. Haklays Stufen der Beteiligung mindestens auf Stufe zwei einsortiert werden können, da bei Stufe eins die Teilnehmer nicht ausreichend konstruktiv am Problem mitarbeiten.
+
+\subsection{TIMA im Citizen Science Rahmen}
+In einem Citizen Science Projekt sind weitere Problemstellungen zu beachten, als in einem gewöhnlichen Informatikprojekt. Die Nutzer sind keine bezahlten oder interessierten Angestellten, sondern gehören der breite Masse an. So nutzen wir die Intelligenz der Masse, die wichtigsten Assoziationen zu einem bestimmten Wort zu finden. Eine sinnvolle Assoziationsdatenbank lässt sich nur mit mithilfe einer großen Anzahl Nutzer erstellen.
+
+In einem Citizen Science Projekt muss die \textbf{Datenqualität} überprüft und gesichert werden. Da fast jeder Nutzer ein Laie ist, gibt er eventuell nicht immer ideale Werte ein. Dadurch, dass Nutzer freie Werte eintragen können, ist das Projekt auch gegen Vandalismus besonders anfällig. Zuletzt muss bedacht werden, das die Nutzer in keiner Form bezahlt werden. Daher muss sich TIMA damit auseinander setzen, wie es Menschen die nötige \textbf{Motivation} liefert, etwas zum Projekt beizutragen. Dabei fokussieren wir uns auf Spiele, um einen Anreiz zum Mitwirken zu geben.
+
+Wir ordnen TIMA dem Typ „Virtuell“ zu und setzen es auf Stufe zwei von M. Haklays Stufen der Beteiligung.
 
 \section{Grundlegende Dateneingabe}
 Die Dateneingabe erfolgt bei TIMA im einfachsten Fall entweder über die Webseite oder die bereits entstanden Applikationen. Dabei werden nacheinander, dem Nutzer Wörter gegeben, zu denen er eine Assoziation eingeben soll. Der dabei gewählte Algorithmus zur Wortauswahl wird im nächsten Abschnitt beschrieben.
